@@ -15,4 +15,12 @@ export default class BaseElement {
   async click() {
     await this._locator.click();
   }
+
+  /**
+   * Get visible text from element
+   * @returns {Promise<string>}
+   */
+  async getText() {
+    return await this._locator.innerText();
+  }
 }
