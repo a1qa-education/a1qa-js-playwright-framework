@@ -12,4 +12,25 @@ export default class BasePage {
   get name() {
     return this._name;
   }
+
+  /**
+   * Wait for page to load
+   * @returns {Promise<void>}
+   */
+  async waitForPageToLoad() {
+    await this._uniqueLocator.waitFor({ state: 'visible' });
+  }
+
+  /**
+   * Check if the page is opened
+   * @returns {Promise<boolean>}
+   */
+  async isPageOpened() {
+    try {
+      await this.waitForPageToLoad();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
