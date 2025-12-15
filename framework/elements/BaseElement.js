@@ -2,10 +2,10 @@ import ElementType from '../constants/ElementType.js';
 
 export default class BaseElement {
   constructor(page, selector, name) {
-    this.page = page;
-    this.locator = page.locator(selector);
-    this.name = name;
-    this.type = ElementType.ELEMENT;
+    this._page = page;
+    this._locator = page.locator(selector);
+    this._name = name;
+    this._type = ElementType.ELEMENT;
   }
 
   /**
@@ -13,6 +13,6 @@ export default class BaseElement {
    * @returns {Promise<void>}
    */
   async click() {
-    await this.locator.click();
+    await this._locator.click();
   }
 }
