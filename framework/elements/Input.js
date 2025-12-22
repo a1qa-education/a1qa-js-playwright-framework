@@ -15,4 +15,12 @@ export class Input extends BaseElement {
   async typeText(text) {
     await this._locator.fill(text);
   }
+
+  /**
+   * Get value of the input element
+   * @returns {Promise<string>} Value from element
+   */
+  async getValue() {
+    return await this._locator.inputValue();
+  }
 }
