@@ -1,7 +1,7 @@
 export default class BasePage {
-  constructor(page, uniqueSelector, name) {
+  constructor(page, uniqueLocator, name) {
     this._page = page;
-    this._uniqueLocator = page.locator(uniqueSelector);
+    this._uniqueLocator = uniqueLocator;
     this._name = name;
   }
 
