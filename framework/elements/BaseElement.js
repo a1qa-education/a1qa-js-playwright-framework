@@ -1,4 +1,5 @@
 import ElementType from '../constants/ElementType.js';
+import ElementStateHandler from './helpers/elementState.js';
 
 export default class BaseElement {
   constructor(page, selector, name) {
@@ -6,6 +7,10 @@ export default class BaseElement {
     this._locator = page.locator(selector);
     this._name = name;
     this._type = ElementType.ELEMENT;
+  }
+
+  get state() {
+    return new ElementStateHandler(this._locator, this._name);
   }
 
   /**
