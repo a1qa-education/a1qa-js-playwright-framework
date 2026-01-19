@@ -1,23 +1,45 @@
+import { expect } from '@playwright/test';
+
 export default class ElementStateHandler {
   constructor(locator, name) {
     this._locator = locator;
     this._name = name;
   }
 
-  async isEnabled() {
-    return await this._locator.isEnabled();
+  async isEnabled(timeout = 5000) {
+    try {
+      await expect(this._locator).toBeEnabled({ timeout });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  async isDisplayed() {
-    return await this._locator.isVisible();
+  async isDisplayed(timeout = 5000) {
+    try {
+      await expect(this._locator).toBeVisible({ timeout });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  async isClickable() {
-    return (await this._locator.isEnabled()) &&
-           (await this._locator.isVisible());
+  async isClickable(timeout = 5000) {
+    try {
+      await expect(this._locator).toBeVisible({ timeout });
+      await expect(this._locator).toBeEnabled({ timeout });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  async isSelected() {
-    return await this._locator.isChecked();
+  async isSelected(timeout = 5000) {
+    try {
+      await expect(this._locator).toBeChecked({ timeout });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
