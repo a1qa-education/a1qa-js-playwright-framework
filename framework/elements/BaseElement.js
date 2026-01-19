@@ -2,11 +2,20 @@ import ElementType from '../constants/ElementType.js';
 import ElementStateHandler from './helpers/elementState.js';
 
 export default class BaseElement {
-  constructor(page, selector, name) {
+  constructor(page, locator, name) {
     this._page = page;
-    this._locator = page.locator(selector);
     this._name = name;
     this._type = ElementType.ELEMENT;
+
+    this._locatorInput = locator;
+    this._locator = 
+      typeof locator === 'string'
+        ? page.locator(locator)
+        : locator;
+  }
+
+  get locator() {
+    return this._locator;
   }
 
   get state() {
