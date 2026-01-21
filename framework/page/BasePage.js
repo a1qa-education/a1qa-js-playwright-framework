@@ -1,3 +1,5 @@
+import Timeouts from "../constants/Timeouts.js";
+
 export default class BasePage {
   constructor(page, uniqueLocator, name) {
     this._page = page;
@@ -18,7 +20,10 @@ export default class BasePage {
    * @returns {Promise<void>}
    */
   async waitForPageToLoad() {
-    await this._uniqueLocator.waitFor({ state: 'visible' });
+    await this._uniqueLocator.waitFor({
+      state: 'visible',
+      timeout: Timeouts.WAIT_PAGE_LOAD, 
+    });
   }
 
   /**

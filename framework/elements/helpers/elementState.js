@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import Timeouts from '../../constants/Timeouts.js';
 
 export default class ElementStateHandler {
   constructor(locator, name) {
@@ -6,7 +7,7 @@ export default class ElementStateHandler {
     this._name = name;
   }
 
-  async isEnabled(timeout = 5000) {
+  async isEnabled(timeout = Timeouts.EXPLICIT_WAIT) {
     try {
       await expect(this._locator).toBeEnabled({ timeout });
       return true;
@@ -15,7 +16,7 @@ export default class ElementStateHandler {
     }
   }
 
-  async isDisplayed(timeout = 5000) {
+  async isDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
     try {
       await expect(this._locator).toBeVisible({ timeout });
       return true;
@@ -24,7 +25,7 @@ export default class ElementStateHandler {
     }
   }
 
-  async isClickable(timeout = 5000) {
+  async isClickable(timeout = Timeouts.EXPLICIT_WAIT) {
     try {
       await expect(this._locator).toBeVisible({ timeout });
       await expect(this._locator).toBeEnabled({ timeout });
@@ -34,7 +35,7 @@ export default class ElementStateHandler {
     }
   }
 
-  async isSelected(timeout = 5000) {
+  async isSelected(timeout = Timeouts.EXPLICIT_WAIT) {
     try {
       await expect(this._locator).toBeChecked({ timeout });
       return true;
