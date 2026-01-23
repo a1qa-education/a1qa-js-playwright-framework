@@ -1,8 +1,7 @@
 import Timeouts from "../constants/Timeouts.js";
 
 export default class BasePage {
-  constructor(page, uniqueLocator, name) {
-    this._page = page;
+  constructor(uniqueLocator, name) {
     this._uniqueLocator = uniqueLocator;
     this._name = name;
   }
