@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './examples/ui/tests',
   reporter: 'html',
   use: {
     trace: 'on-first-retry',

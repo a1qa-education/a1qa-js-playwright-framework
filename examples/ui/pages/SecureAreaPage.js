@@ -1,0 +1,19 @@
+import { Button, Label } from "../../../framework/ui/elements/index.js";
+import BasePage from "../../../framework/ui/page/BasePage.js";
+import { preciseTextLocator } from "../../../framework/utils/locatorHelper.js";
+
+export default class SecureAreaPage extends BasePage {
+  constructor(page) {
+    super(preciseTextLocator(page, 'Secure Area'), 'Secure Area Page');
+    this.message = new Label(page.locator('.subheader'), 'Success message');
+    this.logoutButton = new Button(page.locator('.button'), 'Logout button');
+  }
+
+  async getMessageText() {
+    return await this.message.getText();
+  }
+
+  async clickLogoutButton() {
+    await this.logoutButton.click();
+  }
+}
