@@ -1,19 +1,16 @@
 import { test as base, expect } from '@playwright/test';
 import Browser from '../browser/Browser.js';
+import { settings, testData } from '../../utils/ConfigReader.js';
 
-/**
- * @typedef {import('@playwright/test').TestFixtures} TestFixtures
- * @typedef {{ browser: Browser }} BrowserFixtures
- */
-
-/** @type {import('@playwright/test').TestType<BrowserFixtures & TestFixtures>} */
+/** @type {import('@playwright/test').TestType<{ browser: Browser }>} */
 export const test = base.extend({
-  browser: async ({ browser: pwBrowser }, use) => {
+  browser: async ({ browser: pwBrowser }, use, testInfo) => {
     const context = await pwBrowser.newContext();
     const page = await context.newPage();
-
-    await use(new Browser(page));
-
+    const myBrowser = new Browser(page);
+    
+    await myBrowser.openUrl(settings.baseUrl);
+    await use(myBrowser);
     await context.close();
   },
 });
