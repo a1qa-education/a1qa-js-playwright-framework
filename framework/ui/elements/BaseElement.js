@@ -42,4 +42,12 @@ export default class BaseElement {
   async isElementPresent() {
     return (await this._locator.count()) > 0;
   }
+
+  /**
+   * Check if element is currently visible on the page
+   * @returns {Promise<boolean>}
+   */
+  async isDisplayed() {
+    return await this._locator.isVisible();
+  }
 }
