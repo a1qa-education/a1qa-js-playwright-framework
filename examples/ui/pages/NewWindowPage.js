@@ -10,6 +10,6 @@ export default class NewWindowPage extends BasePage {
 
   async isNewWindowLblDisplayed() {
     this.newWindowLbl.waitForDisplayed();
-    return await this.newWindowLbl.isDisplayed();
+    return await this.newWindowLbl.state.isDisplayed();
   }
 }
