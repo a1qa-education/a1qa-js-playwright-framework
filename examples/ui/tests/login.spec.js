@@ -3,16 +3,26 @@ import { test, expect } from '../../../framework/ui/fixtures/browser.fixture.js'
 import MainPage from '../pages/MainPage.js';
 import LoginPage from '../pages/LoginPage.js';
 import SecureAreaPage from '../pages/SecureAreaPage.js';
+import Browser from '../../../framework/ui/browser/Browser.js';
 
-const username = 'tomsmith';
-const password = 'SuperSecretPassword!';
+const username = '';
+const password = '';
 const successfulMessage = 'Welcome to the Secure Area. When you are done click logout below.';
 
-test.beforeEach(async ( { browser }) => {
+test.beforeEach(
+  /**
+   * @param {{ browser: Browser }} fixtures
+   */
+  async ( { browser }) => {
   await browser.openUrl('https://the-internet.herokuapp.com');
 });
 
-test('successful message should be displayed after logging into secure area', async ({ browser }) => {
+test(
+  'successful message should be displayed after logging into secure area',
+  /**
+   * @param {{ browser: Browser }} fixtures
+   */
+  async ({ browser }) => {
   const mainPage = new MainPage(browser.page);
   await mainPage.clickNavigationLink('Form Authentication');
 

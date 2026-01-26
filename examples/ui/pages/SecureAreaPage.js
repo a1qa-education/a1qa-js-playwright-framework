@@ -1,10 +1,10 @@
-import { Button, Label } from "../../../framework/ui/elements/index.js";
+import { Button, Label, TextBox } from "../../../framework/ui/elements/index.js";
 import BasePage from "../../../framework/ui/page/BasePage.js";
 import { preciseTextLocator } from "../../../framework/utils/locatorHelper.js";
 
 export default class SecureAreaPage extends BasePage {
   constructor(page) {
-    super(preciseTextLocator(page, 'Secure Area'), 'Secure Area Page');
+    super(new TextBox(preciseTextLocator(page, 'Secure Area'), 'secure area page unique element'), 'Secure Area Page');
     this.message = new Label(page.locator('.subheader'), 'Success message');
     this.logoutButton = new Button(page.locator('.button'), 'Logout button');
   }

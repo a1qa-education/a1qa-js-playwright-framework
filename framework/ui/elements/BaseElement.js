@@ -1,4 +1,5 @@
 import ElementType from '../constants/ElementType.js';
+import Timeouts from '../constants/Timeouts.js';
 import ElementStateHandler from './helpers/elementState.js';
 
 export default class BaseElement {
@@ -30,5 +31,15 @@ export default class BaseElement {
    */
   async getText() {
     return await this._locator.innerText();
+  }
+
+    /** Wait for element to be visible */
+  async waitForDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
+    await this._locator.waitFor({ state: 'visible', timeout });
+  }
+
+  /** Check if element exists in DOM */
+  async isElementPresent() {
+    return (await this._locator.count()) > 0;
   }
 }

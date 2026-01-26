@@ -1,18 +1,25 @@
 import { defineConfig } from '@playwright/test';
 
+const browserName = process.env.BROWSER || 'chromium';
+
 export default defineConfig({
   testDir: './examples/ui/tests',
-  reporter: 'html',
+  reporter: 'list',
   use: {
     trace: 'on-first-retry',
+    headless: false,
+    viewport: null,
   },
-
   projects: [
     {
-      name: process.env.BROWSER || 'chromium',
+      name: browserName,
       use: {
-        browserName: process.env.BROWSER || 'chromium',
+        browserName: browserName,
         headless: false,
+        viewport: null,
+        launchOptions: {
+          args: browserName === 'chromium' ? ['--start-maximized'] : [],
+        },
       },
     },
   ],
