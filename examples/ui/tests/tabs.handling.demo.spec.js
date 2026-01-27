@@ -5,7 +5,7 @@ import MultipleWindowsPage from '../pages/MultipleWindowsPage.js';
 import NewWindowPage from '../pages/NewWindowPage.js';
 
 test('demo test for handling tabs', 
-  async ({ browser }) => {
+  async ({ customBrowser: browser }) => {
   const mainPage = new MainPage(browser.page);
   
   mainPage.clickNavigationLink("Multiple Windows");
@@ -15,6 +15,5 @@ test('demo test for handling tabs',
   await browser.switchToTab(1);
   const newWindowPage = new NewWindowPage(browser.page);
   expect (await newWindowPage.isNewWindowLblDisplayed()).toBe(true);
-  await browser.closeTab(1);
 }
 );

@@ -6,7 +6,7 @@ import MainPage from '../pages/MainPage.js';
 const successfulMessage = 'You successfully clicked an alert';
 
 test('demo test for alerts', 
-  async ({ browser }) => {
+  async ({ customBrowser: browser }) => {
   const mainPage = new MainPage(browser.page);
   await mainPage.clickNavigationLink('JavaScript Alerts');
 

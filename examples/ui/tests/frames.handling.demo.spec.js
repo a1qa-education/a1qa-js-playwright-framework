@@ -5,7 +5,7 @@ import MainPage from '../pages/MainPage.js';
 import NestedFramesPage from '../pages/NestedFramesPage.js';
 
 test('frames handling demo test', 
-  async ({ browser }) => {
+  async ({ customBrowser: browser }) => {
   const mainPage = new MainPage(browser.page);
 
   await mainPage.clickNavigationLink("Frames");
