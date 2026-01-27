@@ -13,14 +13,14 @@ export default class NestedFramesPage extends BasePage {
   }
 
   async getMiddleFrameText() {
-    return await this.frameUtils.getText(
+    return this.frameUtils.getText(
       ['frame[name="frame-top"]', 'frame[name="frame-middle"]'],
       '#content'
     );
   }
 
   async getLeftFrameText() {
-    return await this.frameUtils.getText(
+    return this.frameUtils.getText(
       ['frame[name="frame-top"]', 'frame[name="frame-left"]'],
       'body'
     );

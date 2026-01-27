@@ -10,7 +10,7 @@ export default class SecureAreaPage extends BasePage {
   }
 
   async getMessageText() {
-    return await this.message.getText();
+    return this.message.getText();
   }
 
   async clickLogoutButton() {

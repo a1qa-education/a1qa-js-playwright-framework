@@ -21,6 +21,6 @@ export default class FrameUtils {
   async getText(frameSelectors, targetSelector) {
     const locator = this.locatorInFrames(frameSelectors, targetSelector);
     await locator.waitFor({ state: 'attached' });
-    return await locator.innerText();
+    return locator.innerText();
   }
 }

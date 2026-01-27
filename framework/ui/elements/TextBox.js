@@ -21,6 +21,6 @@ export class TextBox extends BaseElement {
    * @returns {Promise<string>} Value from element
    */
   async getValue() {
-    return await this._locator.inputValue();
+    return this._locator.inputValue();
   }
 }

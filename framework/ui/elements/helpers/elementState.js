@@ -43,4 +43,8 @@ export default class ElementStateHandler {
       return false;
     }
   }
+
+  async isPresent() {
+    return (await this._locator.count()) > 0;
+  }
 }

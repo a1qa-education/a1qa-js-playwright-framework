@@ -36,7 +36,7 @@ export default class BasePage {
    */
   async isPageOpened() {
     try {
-      return await this.uniqueElement.isElementPresent();
+      return this.uniqueElement.state.isPresent();
     } catch {
       return false;
     }

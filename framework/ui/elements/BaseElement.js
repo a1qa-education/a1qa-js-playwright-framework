@@ -30,16 +30,11 @@ export default class BaseElement {
    * @returns {Promise<string>}
    */
   async getText() {
-    return await this._locator.innerText();
+    return this._locator.innerText();
   }
 
     /** Wait for element to be visible */
   async waitForDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
     await this._locator.waitFor({ state: 'visible', timeout });
-  }
-
-  /** Check if element exists in DOM */
-  async isElementPresent() {
-    return (await this._locator.count()) > 0;
   }
 }

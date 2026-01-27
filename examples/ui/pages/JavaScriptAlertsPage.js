@@ -14,6 +14,6 @@ export default class JavaScriptAlertsPage extends BasePage {
   }
 
   async getResultText() {
-    return await this.result.getText();
+    return this.result.getText();
   }
 }
