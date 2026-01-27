@@ -1,5 +1,5 @@
 // @ts-check
-import { test, expect } from '../../../framework/ui/fixtures/browser.fixture.js';
+import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import FramesPage from '../pages/FramesPage.js';
 import MainPage from '../pages/MainPage.js';
 import NestedFramesPage from '../pages/NestedFramesPage.js';

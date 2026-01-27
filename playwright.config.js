@@ -1,20 +1,31 @@
 import { defineConfig } from '@playwright/test';
 
 const browserName = process.env.BROWSER || 'chromium';
+const isCI = !!process.env.CI;
 
 export default defineConfig({
   testDir: './examples/ui/tests',
+
+  workers: isCI ? 1 : undefined,
+
+  forbidOnly: isCI,
+
   reporter: 'list',
+
   use: {
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+    video: 'on-first-retry',
+    screenshot: 'only-on-failure',
+
     headless: false,
     viewport: null,
   },
+
   projects: [
     {
       name: browserName,
       use: {
-        browserName: browserName,
+        browserName,
         headless: false,
         viewport: null,
         launchOptions: {

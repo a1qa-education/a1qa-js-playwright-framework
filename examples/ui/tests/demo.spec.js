@@ -1,11 +1,11 @@
 // @ts-check
-import { test, expect } from '../../../framework/ui/fixtures/browser.fixture.js';
+import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import MainPage from '../pages/MainPage.js';
 import LoginPage from '../pages/LoginPage.js';
 import SecureAreaPage from '../pages/SecureAreaPage.js';
-import { testData } from '../../../framework/utils/ConfigReader.js';
+import { testData } from '#framework/utils/ConfigReader.js';
 
-test('successful message should be displayed after logging into secure area',
+test('demo test for a successful login',
   async ({ browser }) => {
   const mainPage = new MainPage(browser.page);
   await mainPage.clickNavigationLink('Form Authentication');

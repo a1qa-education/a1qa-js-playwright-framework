@@ -1,6 +1,6 @@
-import { Button, TextBox } from "../../../framework/ui/elements/index.js";
-import BasePage from "../../../framework/ui/page/BasePage.js";
-import { preciseTextLocator } from "../../../framework/utils/locatorHelper.js";
+import { Button, TextBox } from "#framework/ui/elements/index.js";
+import BasePage from "#framework/ui/page/BasePage.js";
+import { preciseTextLocator } from "#framework/utils/locatorHelper.js";
 
 export default class FramesPage extends BasePage {
   constructor(page) {

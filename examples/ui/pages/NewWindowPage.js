@@ -1,6 +1,6 @@
-import BasePage from "../../../framework/ui/page/BasePage.js";
-import { Label } from '../../../framework/ui/elements/index.js';
-import { preciseTextLocator } from "../../../framework/utils/locatorHelper.js";
+import BasePage from "#framework/ui/page/BasePage.js";
+import { Label } from "#framework/ui/elements/index.js";
+import { preciseTextLocator } from "#framework/utils/locatorHelper.js";
 
 export default class NewWindowPage extends BasePage {
   constructor(page) {

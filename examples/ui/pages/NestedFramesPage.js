@@ -1,6 +1,6 @@
-import BasePage from "../../../framework/ui/page/BasePage.js";
-import { Label } from "../../../framework/ui/elements/index.js";
-import FrameUtils from "../../../framework/utils/FrameUtils.js";
+import BasePage from "#framework/ui/page/BasePage.js";
+import { Label } from "#framework/ui/elements/index.js";
+import FrameUtils from "#framework/utils/FrameUtils.js";
 
 export default class NestedFramesPage extends BasePage {
   constructor(page) {

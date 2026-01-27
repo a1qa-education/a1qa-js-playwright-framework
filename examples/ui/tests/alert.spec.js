@@ -1,11 +1,11 @@
 // @ts-check
-import { test, expect } from '../../../framework/ui/fixtures/browser.fixture.js';
+import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import JavaScriptAlertsPage from '../pages/JavaScriptAlertsPage.js';
 import MainPage from '../pages/MainPage.js';
 
 const successfulMessage = 'You successfully clicked an alert';
 
-test('demo test for alerts, new tabs and frames', 
+test('demo test for alerts', 
   async ({ browser }) => {
   const mainPage = new MainPage(browser.page);
   await mainPage.clickNavigationLink('JavaScript Alerts');

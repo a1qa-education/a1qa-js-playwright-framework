@@ -1,10 +1,10 @@
 // @ts-check
-import { test, expect } from '../../../framework/ui/fixtures/browser.fixture.js';
+import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import MainPage from '../pages/MainPage.js';
 import MultipleWindowsPage from '../pages/MultipleWindowsPage.js';
 import NewWindowPage from '../pages/NewWindowPage.js';
 
-test('demo test for alerts, new tabs and frames', 
+test('demo test for handling tabs', 
   async ({ browser }) => {
   const mainPage = new MainPage(browser.page);
   
