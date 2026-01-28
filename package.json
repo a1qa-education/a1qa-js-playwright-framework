@@ -1,8 +1,12 @@
 {
+  "type": "module",
   "name": "a1qa-js-playwright-framework",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "imports": {
+    "#framework/*": "./framework/*"
+  },
   "scripts": {},
   "keywords": [],
   "author": "",
