@@ -1,8 +1,8 @@
 // @ts-check
 import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
-import MainPage from '../pages/MainPage.js';
-import LoginPage from '../pages/LoginPage.js';
-import SecureAreaPage from '../pages/SecureAreaPage.js';
+import MainPage from './pages/MainPage.js';
+import LoginPage from './pages/LoginPage.js';
+import SecureAreaPage from './pages/SecureAreaPage.js';
 import { testData } from '#framework/utils/ConfigReader.js';
 
 test('demo test for a successful login',

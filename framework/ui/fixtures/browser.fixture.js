@@ -1,6 +1,6 @@
 import { test as base, expect } from '@playwright/test';
 import Browser from '../browser/Browser.js';
-import { settings } from '../../utils/ConfigReader.js'; // Removed testData if unused here
+import { settings } from '../../utils/ConfigReader.js';
 
 /**
  * @type {import('@playwright/test').TestType<{ customBrowser: Browser }>} 

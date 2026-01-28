@@ -4,7 +4,7 @@ const browserName = process.env.BROWSER || 'chromium';
 const isCI = !!process.env.CI;
 
 export default defineConfig({
-  testDir: './examples/ui/tests',
+  testDir: './tests',
 
   workers: isCI ? 1 : undefined,
 
