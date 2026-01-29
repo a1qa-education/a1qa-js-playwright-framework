@@ -12,6 +12,6 @@ export class Dropdown extends BaseElement {
    * @returns {Promise<Array<string>>}
    */
   async selectOption(option) {
-    this._locator.selectOption(option);
+    this.locator.selectOption(option);
   }
 }

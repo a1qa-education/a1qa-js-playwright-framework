@@ -13,10 +13,10 @@ export class FileInput extends BaseElement {
    * @returns {Promise<void>}
    */
   async uploadFile(filePath) {
-    await this._locator.setInputFiles(filePath);
+    await this.locator.setInputFiles(filePath);
   }
 
   async clear() {
-    await this._locator.setInputFiles([]);
+    await this.locator.setInputFiles([]);
   }
 }
