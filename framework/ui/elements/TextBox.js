@@ -13,7 +13,7 @@ export class TextBox extends BaseElement {
    * @returns {Promise<void>}
    */
   async typeText(text) {
-    await this._locator.fill(text);
+    await this.locator.fill(text);
   }
 
   /**
@@ -21,6 +21,6 @@ export class TextBox extends BaseElement {
    * @returns {Promise<string>} Value from element
    */
   async getValue() {
-    return this._locator.inputValue();
+    return this.locator.inputValue();
   }
 }
