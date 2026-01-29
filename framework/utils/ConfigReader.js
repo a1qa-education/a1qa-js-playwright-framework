@@ -19,5 +19,5 @@ function loadConfig(filename) {
 /** @type {{ baseUrl: string }} */
 export const settings = loadConfig('settings.json');
 
-/** @type {{ loginSuccessMessage: string, loginCredentials: { user: string, password: string } }} */
+/** @type {{ loginSuccessMessage: string, loginCredentials: { user: string, password: string }, fileForUpload: string }} */
 export const testData = loadConfig('testdata.json');
