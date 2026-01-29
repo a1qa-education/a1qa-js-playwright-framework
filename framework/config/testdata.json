@@ -3,5 +3,10 @@
   "loginCredentials": {
     "user": "",
     "password": ""
-  }
+  },
+  "basicAuthCredentials": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "successfulBasicAuthMessage": "Congratulations! You must have the proper credentials."
 }
