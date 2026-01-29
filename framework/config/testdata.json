@@ -4,6 +4,7 @@
     "user": "",
     "password": ""
   },
+  "fileForUpload": "",
   "basicAuthCredentials": {
     "username": "admin",
     "password": "admin"
