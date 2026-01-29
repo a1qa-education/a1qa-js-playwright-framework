@@ -3,5 +3,6 @@
   "loginCredentials": {
     "user": "",
     "password": ""
-  }
+  },
+  "fileForUpload": ""
 }
