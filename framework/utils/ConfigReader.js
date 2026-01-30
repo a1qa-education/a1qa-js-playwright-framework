@@ -16,8 +16,8 @@ function loadConfig(filename) {
   }
 }
 
-/** @type {{ baseUrl: string }} */
+/** @type {{ baseUrl: string, downloadDir: string }} */
 export const settings = loadConfig('settings.json');
 
-/** @type {{ loginSuccessMessage: string, loginCredentials: { user: string, password: string }, fileForUpload: string }} */
+/** @type {{ loginSuccessMessage: string, loginCredentials: { user: string, password: string }, fileForUpload: string, downloadFileName: string }} */
 export const testData = loadConfig('testdata.json');
