@@ -4,6 +4,11 @@
     "user": "",
     "password": ""
   },
+  "basicAuthCredentials": {
+    "username": "",
+    "password": ""
+  },
+  "successfulBasicAuthMessage": "Congratulations! You must have the proper credentials.",
   "fileForUpload": "",
   "downloadFileName": ""
 }
