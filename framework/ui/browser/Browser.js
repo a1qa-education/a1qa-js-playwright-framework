@@ -1,3 +1,9 @@
+import path from 'path';
+import fs from 'fs';
+import { settings } from '../../utils/ConfigReader.js';
+
+const DOWNLOAD_DIR = path.resolve(settings.downloadDir);
+
 export default class Browser {
   constructor(page) {
     this._page = page;
@@ -104,5 +110,21 @@ export default class Browser {
 
   async getTabsCount() {
     return this._pages.filter(p => !p.isClosed()).length;
+  }
+
+  async downloadAndSave(action, fileName) {
+    const [download] = await Promise.all([
+      this._page.waitForEvent('download'),
+      action(),
+    ]);
+
+    const filePath = path.join(DOWNLOAD_DIR, fileName);
+    await download.saveAs(filePath);
+
+    return filePath;
+  }
+
+  fileExists(filePath) {
+    return fs.existsSync(filePath);
   }
 }

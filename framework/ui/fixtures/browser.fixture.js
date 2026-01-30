@@ -1,6 +1,10 @@
 import { test as base, expect } from '@playwright/test';
 import Browser from '../browser/Browser.js';
 import { settings, testData } from '../../utils/ConfigReader.js';
+import path from 'path';
+import fs from 'fs';
+
+const DOWNLOAD_DIR = path.resolve(settings.downloadDir);
 
 /**
  * Helper function to create a browser fixture with optional context options
@@ -9,7 +13,13 @@ import { settings, testData } from '../../utils/ConfigReader.js';
  */
 function createBrowserFixture(contextOptions = {}) {
   return async ({ browser }, use) => {
-    const context = await browser.newContext(contextOptions);
+    fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
+
+    const context = await browser.newContext({
+      acceptDownloads: true,
+      downloadsPath: DOWNLOAD_DIR,
+      ...contextOptions,
+    });
     const page = await context.newPage();
     const myBrowser = new Browser(page);
 
@@ -18,6 +28,8 @@ function createBrowserFixture(contextOptions = {}) {
     }
     await use(myBrowser);
     await context.close();
+    
+    fs.rmSync(DOWNLOAD_DIR, { recursive: true, force: true });
   };
 }
 
