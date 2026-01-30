@@ -6,8 +6,8 @@
   },
   "fileForUpload": "",
   "basicAuthCredentials": {
-    "username": "admin",
-    "password": "admin"
+    "username": "",
+    "password": ""
   },
   "successfulBasicAuthMessage": "Congratulations! You must have the proper credentials."
 }
