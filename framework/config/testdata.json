@@ -4,5 +4,10 @@
     "user": "",
     "password": ""
   },
-  "fileForUpload": ""
+  "fileForUpload": "",
+  "basicAuthCredentials": {
+    "username": "",
+    "password": ""
+  },
+  "successfulBasicAuthMessage": "Congratulations! You must have the proper credentials."
 }
