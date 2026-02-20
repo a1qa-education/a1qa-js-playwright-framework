@@ -23,20 +23,12 @@ export default class BasePage {
   }
 
   /**
-   * Wait for page to load
-   * @returns {Promise<void>}
-   */
-  async waitForPageToLoad(timeout = Timeouts.WAIT_PAGE_LOAD) {    
-    await this.uniqueElement.waitForDisplayed(timeout);
-  }
-
-  /**
    * Check if the page is opened
    * @returns {Promise<boolean>}
    */
   async isPageOpened(timeout = Timeouts.WAIT_PAGE_LOAD) {
     try {
-      await this.waitForPageToLoad(timeout);
+      await this.uniqueElement.waitForDisplayed(timeout);
       return true;
     } catch {
       return false;
