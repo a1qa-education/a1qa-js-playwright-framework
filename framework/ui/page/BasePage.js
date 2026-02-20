@@ -34,9 +34,10 @@ export default class BasePage {
    * Check if the page is opened
    * @returns {Promise<boolean>}
    */
-  async isPageOpened() {
+  async isPageOpened(timeout = Timeouts.WAIT_PAGE_LOAD) {
     try {
-      return this.uniqueElement.state.isPresent();
+      await this.waitForPageToLoad(timeout);
+      return true;
     } catch {
       return false;
     }
