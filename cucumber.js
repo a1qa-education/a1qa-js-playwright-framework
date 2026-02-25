@@ -3,11 +3,15 @@ export default {
   import: [
     'tests/support/**/*.js',
     'tests/steps/**/*.js'
-  ],
+  ], tags: "not @skip", 
+
+  formatOptions: {
+    resultsDir: "allure-results"
+  },
   format: [
-    'summary', 
-    'progress-bar', 
-    ['html', 'reports/cucumber-report.html']
+    'progress', 
+    ['html', 'reports/cucumber-report.html'],
+    'allure-cucumberjs/reporter:./allure-results/dummy.txt'
   ],
   parallel: 1
 }
