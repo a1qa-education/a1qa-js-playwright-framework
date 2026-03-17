@@ -14,7 +14,7 @@ export default class BaseElement {
   }
 
   get state() {
-    return new ElementStateHandler(this._locator, this._name);
+    return new ElementStateHandler(this.locator, this._name);
   }
 
   /**
@@ -22,7 +22,7 @@ export default class BaseElement {
    * @returns {Promise<void>}
    */
   async click() {
-    await this._locator.click();
+    await this.locator.click();
   }
 
   /**
@@ -30,11 +30,19 @@ export default class BaseElement {
    * @returns {Promise<string>}
    */
   async getText() {
-    return this._locator.innerText();
+    return this.locator.innerText();
+  }
+
+  /**
+   * Move mouse cursor to element
+   * @returns {Promise<void>}
+   */
+  async moveTo() {
+    await this.locator.hover();
   }
 
     /** Wait for element to be visible */
   async waitForDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
-    await this._locator.waitFor({ state: 'visible', timeout });
+    await this.locator.waitFor({ state: 'visible', timeout });
   }
 }
