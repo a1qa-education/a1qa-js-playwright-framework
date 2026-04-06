@@ -127,4 +127,9 @@ export default class Browser {
   fileExists(filePath) {
     return fs.existsSync(filePath);
   }
+  
+  deleteFile(filePath) {
+    fs.unlinkSync(filePath);
+}
+ 
 }
