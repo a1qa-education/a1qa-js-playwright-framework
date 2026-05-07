@@ -5,8 +5,7 @@ import LoginPage from './pages/LoginPage.js';
 import SecureAreaPage from './pages/SecureAreaPage.js';
 import { testData } from '#framework/utils/ConfigReader.js';
 
-test('demo test for a successful login',
-  async ({ customBrowser: browser }) => {
+test('demo test for a successful login', async ({ customBrowser: browser }) => {
   const mainPage = new MainPage(browser.page);
   await mainPage.clickNavigationLink('Form Authentication');
 

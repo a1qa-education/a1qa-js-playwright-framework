@@ -2,10 +2,10 @@ import Timeouts from "../constants/Timeouts.js";
 import BaseElement from "../elements/BaseElement.js";
 
 export default class BasePage {
-   /**
-   * @param {BaseElement} uniqueElement - A unique element that identifies the page
-   * @param {string} name - Name of the page for logging/reporting
-   */
+  /**
+  * @param {BaseElement} uniqueElement - A unique element that identifies the page
+  * @param {string} name - Name of the page for logging/reporting
+  */
   constructor(uniqueElement, name) {
     if (!(uniqueElement instanceof BaseElement)) {
       throw new Error('uniqueElement must be a child of BaseElement');
@@ -26,7 +26,7 @@ export default class BasePage {
    * Wait for page to load
    * @returns {Promise<void>}
    */
-  async waitForPageToLoad(timeout = Timeouts.WAIT_PAGE_LOAD) {    
+  async waitForPageToLoad(timeout = Timeouts.WAIT_PAGE_LOAD) {
     await this.uniqueElement.waitForDisplayed(timeout);
   }
 

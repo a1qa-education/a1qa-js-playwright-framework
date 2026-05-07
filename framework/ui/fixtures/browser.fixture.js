@@ -28,13 +28,18 @@ function createBrowserFixture(contextOptions = {}) {
     }
     await use(myBrowser);
     await context.close();
-    
+
     fs.rmSync(DOWNLOAD_DIR, { recursive: true, force: true });
   };
 }
 
 /**
- * @type {import('@playwright/test').TestType<{ customBrowser: Browser }>} 
+ * @typedef {Object} CustomFixtures
+ * @property {Browser} customBrowser
+ */
+
+/**
+ * @type {import('@playwright/test').TestType<CustomFixtures & import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions>} 
  */
 export const test = base.extend({
   customBrowser: createBrowserFixture(),

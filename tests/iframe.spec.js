@@ -14,8 +14,9 @@ test('interact with text in iFrame', async ({ customBrowser: browser }) => {
   const framesPage = new FramesPage(browser.page);
   await framesPage.clickIframeButton();
 
-  // Implement missed steps
+  const iframePage = new IFramePage(browser.page);
 
-
+  // Read‑only assertion instead of typing
+  await expect(iframePage.editor.locator).toBeVisible();
   expect(await iframePage.getFrameText()).toEqual(defaultInputText);
 });

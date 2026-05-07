@@ -5,12 +5,12 @@ import { ElementsList } from '#framework/ui/elements/helpers/ElementsList.js';
 export default class TablesPage extends BasePage {
   constructor(page) {
     // Change call of super() constructor to approriate one
-    super();
-    
+    super(new Label(page.getByText('Data Tables'), 'Tables Header'), 'Tables Page');
+
     this.dueCells = new ElementsList(
-        page.locator('//*[@id="table1"]//td[4]'), 
-        'Due column cells', 
-        Label
+      page.locator('//*[@id="table1"]//td[4]'),
+      'Due column cells',
+      Label
     );
   }
 

@@ -4,17 +4,33 @@ import FrameUtils from "#framework/utils/FrameUtils.js";
 import { preciseTextLocator } from "#framework/utils/locatorHelper.js";
 
 // Export class
-class IFramePage extends BasePage {
+export default class IFramePage extends BasePage {
   constructor(page) {
     super(
       new Label(preciseTextLocator(page, 'An iFrame containing the TinyMCE WYSIWYG Editor'), "unique element of iFrame Page"),
       'iFrame Page'
     );
-
     // Implement elements 
+    this.frameUtils = new FrameUtils(page);
+    this.editor = new TextBox(this.frameUtils.locatorInFrames(
+      ['#mce_0_ifr'], '#tinymce'), 'Editor input');
+    this.editButton = new Button(preciseTextLocator(page, 'Edit'), 'Edit button');
+    this.undoButton = new Button(preciseTextLocator(page, 'Undo'), 'Undo button');
+  }
+  // Implement methods
 
+  async typeintoEditor(text) {
+    await this.editor.typeText(text);
   }
 
-  // Implement methods
-  
+  async getFrameText() {
+    return await this.editor.getText(
+      ['#mce_0_ifr'], '#tinymce'
+    );
+  }
+
+  async undoChanges() {
+    await this.editButton.click();
+    await this.undoButton.click();
+  }
 }

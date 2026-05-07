@@ -9,5 +9,16 @@ export default class DynamicControlsPage extends BasePage {
   }
 
   // Implement all methods for dynamic_controls test
-
+  async clickEnableButton() {
+    await this.enableButton.click();
+  }
+  async isInputFieldEnabled() {
+    return await this.inputField.state.isEnabled();
+  }
+  async inputTextIntoInputField(text) {
+    await this.inputField.typeText(text);
+  }
+  async getValueFromInputField() {
+    return await this.inputField.getValue();
+  }
 }
