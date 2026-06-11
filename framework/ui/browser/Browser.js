@@ -1,12 +1,16 @@
 import path from 'path';
-import fs from 'fs';
-import ConfigReader from '../../utils/ConfigReader.js';
 
 export default class Browser {
-  constructor(page) {
+  /**
+   * @param {import('@playwright/test').Page} page
+   * @param {string} downloadDir - Isolated directory for downloads
+   */
+  constructor(page, downloadDir) {
     this._page = page;
     this._pages = [page];
     this._currentPage = page;
+    this._downloadDir = downloadDir;
+
     page.context().on('page', (newPage) => {
       if (!this._pages.includes(newPage)) {
         this._pages.push(newPage);
@@ -116,8 +120,7 @@ export default class Browser {
       action(),
     ]);
 
-    const downloadDir = ConfigReader.getDownloadDir(); 
-    const filePath = path.join(downloadDir, fileName);
+    const filePath = path.join(this._downloadDir, fileName);
     await download.saveAs(filePath);
 
     return filePath;

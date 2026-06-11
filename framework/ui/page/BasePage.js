@@ -35,11 +35,6 @@ export default class BasePage {
    * @returns {Promise<boolean>}
    */
   async isPageOpened() {
-    try {
-      await this.waitForPageToLoad();
-      return true;
-    } catch {
-      return false;
-    }
+    return await this.uniqueElement.state.isDisplayed(Timeouts.WAIT_PAGE_LOAD);
   }
 }

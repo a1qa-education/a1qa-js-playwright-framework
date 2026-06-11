@@ -9,23 +9,25 @@ export default class ElementStateHandler {
 
   /**
    * Internal error handler.
-   * Skips regular timeouts (returns false), 
-   * but throws critical failures (strict mode, page closure).
+   * Swallows only timeout errors (indicating the state was not met).
+   * Rethrows all other unexpected errors (strict mode, target closed, invalid selector).
    * 
    * @param {Error} error 
    * @returns {boolean}
    */
   _handleError(error) {
-    if (error.message.includes('strict mode violation')) {
-      throw new Error(`Strict mode violation for element "${this._name}": ${error.message}`);
+    // Rely on Playwright's error name for standard timeouts, 
+    // with a fallback for expect() assertion timeouts.
+    const isTimeout = error.name === 'TimeoutError' || 
+                      error.message.includes('Timeout') || 
+                      error.message.includes('timed out');
+
+    if (isTimeout) {
+      return false;
     }
     
-    if (error.message.includes('Target closed') || error.message.includes('browser has been closed')) {
-      throw new Error(`Page or browser closed while waiting for element "${this._name}": ${error.message}`);
-    }
-    
-    // If this is a regular Timeout, return false
-    return false;
+    // Rethrow any critical infrastructure or locator errors
+    throw error;
   }
 
   async isEnabled(timeout = Timeouts.EXPLICIT_WAIT) {
@@ -67,6 +69,8 @@ export default class ElementStateHandler {
 
   async isPresent() {
     try {
+      // count() does not wait, but if the locator itself is completely broken (strict mode), 
+      // it will throw an error here.
       return (await this._locator.count()) > 0;
     } catch (error) {
       return this._handleError(error);

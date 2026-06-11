@@ -28,7 +28,8 @@ function createBrowserFixture(getContextOptions = () => ({})) {
     });
     
     const page = await context.newPage();
-    const myBrowser = new Browser(page);
+    
+    const myBrowser = new Browser(page, workerDownloadDir);
 
     if (settings.baseUrl) {
       await myBrowser.openUrl(settings.baseUrl);
@@ -47,14 +48,21 @@ function createBrowserFixture(getContextOptions = () => ({})) {
 }
 
 /**
- * @type {import('@playwright/test').TestType<{ customBrowser: Browser }>} 
+ * @typedef {Object} CustomFixtures
+ * @property {Browser} customBrowser
+ */
+
+/**
+ * @type {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>}
  */
 export const test = base.extend({
   customBrowser: createBrowserFixture(),
 });
 
+/**
+ * @type {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>}
+ */
 export const testWithAuth = base.extend({
-  // Wrap in an arrow function so testData is read lazily during test execution
   customBrowser: createBrowserFixture(() => ({
     httpCredentials: ConfigReader.getTestData().basicAuthCredentials
   })),

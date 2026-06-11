@@ -5,13 +5,15 @@ import { preciseTextLocator } from "#framework/utils/locatorHelper.js";
 export default class SecureAreaPage extends BasePage {
   constructor(page) {
     super(new Label(preciseTextLocator(page, 'Secure Area'), 'secure area page unique element'), 'Secure Area Page');
-    this.message = new Label(page.getByRole('heading', { name: 'Welcome to the Secure Area. When you are done click logout below.'}),
-     'Success message');
+    this.message = new Label(
+      page.getByRole('heading', { name: /Welcome to the Secure Area/i }), 
+      'Success message'
+    );
     this.logoutButton = new Button(page.getByText('Logout', { exact: true }), 'Logout button');
   }
 
   async getMessageText() {
-    return this.message.getText();
+    return await this.message.getText();
   }
 
   async clickLogoutButton() {
