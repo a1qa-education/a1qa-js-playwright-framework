@@ -1,8 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { settings } from '../../utils/ConfigReader.js';
-
-const DOWNLOAD_DIR = path.resolve(settings.downloadDir);
+import ConfigReader from '../../utils/ConfigReader.js';
 
 export default class Browser {
   constructor(page) {
@@ -35,7 +33,7 @@ export default class Browser {
   }
 
   async refresh() {
-    await this._page.refresh();
+    await this._page.reload();
   }
 
   async navigateBack() {
@@ -118,13 +116,10 @@ export default class Browser {
       action(),
     ]);
 
-    const filePath = path.join(DOWNLOAD_DIR, fileName);
+    const downloadDir = ConfigReader.getDownloadDir(); 
+    const filePath = path.join(downloadDir, fileName);
     await download.saveAs(filePath);
 
     return filePath;
-  }
-
-  fileExists(filePath) {
-    return fs.existsSync(filePath);
   }
 }

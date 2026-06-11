@@ -12,7 +12,7 @@ export class Checkbox extends BaseElement {
    * @returns {Promise<void>}
    */
   async check() {
-    this.locator.check();
+    await this.locator.check();
   }
 
   /**
@@ -20,6 +20,6 @@ export class Checkbox extends BaseElement {
    * @returns {Promise<void>}
    */
   async uncheck() {
-    this.locator.uncheck();
+    await this.locator.uncheck();
   }
 }

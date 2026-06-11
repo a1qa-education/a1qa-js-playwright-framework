@@ -1,12 +1,14 @@
 // @ts-check
 import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
+import Browser from '#framework/ui/browser/Browser.js';
 import MainPage from './pages/MainPage.js';
 import LoginPage from './pages/LoginPage.js';
 import SecureAreaPage from './pages/SecureAreaPage.js';
-import { testData } from '#framework/utils/ConfigReader.js';
+import ConfigReader from '#framework/utils/ConfigReader.js';
 
 test('demo test for a successful login',
-  async ({ customBrowser: browser }) => {
+  async (/** @type {{ customBrowser: Browser }} */ { customBrowser: browser }) => {
+  const testData = ConfigReader.getTestData();
   const mainPage = new MainPage(browser.page);
   await mainPage.clickNavigationLink('Form Authentication');
 

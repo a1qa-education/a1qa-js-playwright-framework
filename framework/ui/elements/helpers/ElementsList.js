@@ -35,6 +35,13 @@ export class ElementsList {
      * Useful for validation tables/lists.
      */
     async getAllTexts() {
+        const count = await this.getCount();
+        
+        // Wait for the first element to be displayed if the list is not empty
+        if (count > 0) {
+            await this.getByIndex(0).waitForDisplayed();
+        }
+        
         return await this.locator.allInnerTexts();
     }
     

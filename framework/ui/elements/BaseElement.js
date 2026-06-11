@@ -6,7 +6,6 @@ export default class BaseElement {
   constructor(locator, name) {
     this._locator = locator;
     this._name = name;
-    this._type = ElementType.ELEMENT;
   }
 
   get locator() {
@@ -30,7 +29,8 @@ export default class BaseElement {
    * @returns {Promise<string>}
    */
   async getText() {
-    return this.locator.innerText();
+    await this.waitForDisplayed();
+    return await this.locator.innerText();
   }
 
   /**

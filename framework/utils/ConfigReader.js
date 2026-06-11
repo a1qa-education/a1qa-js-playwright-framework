@@ -1,23 +1,44 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-/**
- * Load a JSON config file from the config folder
- * @param {string} filename - JSON file name (e.g., 'settings.json', 'testData.json')
- * @returns {object} Parsed JSON content
- */
-function loadConfig(filename) {
-  const filePath = path.resolve(`./framework/config/${filename}`);
-  try {
-    const raw = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(raw);
-  } catch (err) {
-    throw new Error(`Failed to read or parse config file: ${filename}. ${err.message}`);
-  }
+// Get correct paths for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+class ConfigReader {
+    /**
+     * Lazy load settings.
+     */
+    static getSettings() {
+        // path.resolve ensures the path is built relative to the ConfigReader.js location
+        const settingsPath = path.resolve(__dirname, '../config/settings.json');
+        const rawData = fs.readFileSync(settingsPath, 'utf-8');
+        return JSON.parse(rawData);
+    }
+
+    /**
+     * Lazy load test data.
+     */
+    static getTestData() {
+        const testDataPath = path.resolve(__dirname, '../config/testdata.json');
+        const rawData = fs.readFileSync(testDataPath, 'utf-8');
+        return JSON.parse(rawData);
+    }
+
+    /**
+     * Safely get the download directory with a fallback.
+     */
+    static getDownloadDir() {
+        const settings = this.getSettings();
+        
+        // Guard against missing key in config
+        if (!settings.downloadDir) {
+            return path.resolve(process.cwd(), 'test-results/downloads');
+        }
+        
+        return path.resolve(process.cwd(), settings.downloadDir);
+    }
 }
 
-/** @type {{ baseUrl: string, downloadDir: string }} */
-export const settings = loadConfig('settings.json');
-
-/** @type {{ loginSuccessMessage: string, loginCredentials: { user: string, password: string }, fileForUpload: string, downloadFileName: string }} */
-export const testData = loadConfig('testdata.json');
+export default ConfigReader;
