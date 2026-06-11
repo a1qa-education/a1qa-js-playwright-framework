@@ -10,7 +10,7 @@ This repository contains a test automation framework built with **Playwright** a
 * **Strict Page Object Model:** Enforces absolute encapsulation of locators and state.
 * **Element Wrappers:** Custom classes (`Button`, `TextBox`, `Label`, `Checkbox`, `Dropdown`) that encapsulate logging, reliable waits, and strict-mode error handling.
 * **Smart Isolation:** Uses **Test-Scoped Fixtures** to guarantee every test runs in a completely fresh environment (clean cookies, storage, downloads, and context).
-* **Lazy-Loaded Configuration:** Centralized configuration via `utils/ConfigReader.js` that evaluates at runtime, making it CI/CD and environment variable friendly.
+* **Lazy-Loaded & Cached Configuration:** Centralized configuration via `utils/ConfigReader.js` that evaluates at runtime and memoizes results to prevent I/O bottlenecks during parallel execution.
 
 ---
 
@@ -41,13 +41,13 @@ a1qa-js-playwright-framework/
 
 This framework mandates a strict, classic approach to the Page Object pattern to ensure maximum stability and zero "flakiness". All contributors must adhere to the following rules:
 
-1. **Selector Isolation:** All interactions with locators and selectors must happen exclusively inside Page classes. Tests (`.spec.js` files) must never contain `page.locator()` or `page.getBy...`[cite: 23].
-2. **Inheritance:** Every application page class must inherit directly from `BasePage`[cite: 20, 21, 22].
-3. **Unique Page Elements:** A unique element (`BaseElement` instance) must be passed to the `super()` constructor of every Page class. This element is used internally by `waitForPageToLoad()` and `isPageOpened()` to verify the page state.
-4. **Encapsulated Locators:** Locators must never be exposed directly as class properties. They must be wrapped inside custom Element classes (e.g., `this.loginBtn = new Button(...)`)[cite: 20, 21, 22].
-5. **Action-Oriented Methods:** Page classes should expose methods that represent user actions (e.g., `typeUsername(name)`, `clickLogin()`)[cite: 20, 21, 22].
-6. **No Chaining (No Page Returns):** Page methods must never return an instance of a page (`return this` or `return new NextPage()`). Test flow and navigation are strictly controlled inside the `.spec.js` files[cite: 23].
-7. **No Assertions in Pages:** Page methods must never contain test assertions (no `expect(...)` inside Page classes). All assertions belong in the test file[cite: 20, 21, 22, 23].
+1. **Selector Isolation:** All interactions with locators and selectors must happen exclusively inside Page classes. Tests (`.spec.js` files) must never contain `page.locator()` or `page.getBy...`.
+2. **Inheritance:** Every application page class must inherit directly from `BasePage`.
+3. **Unique Page Elements:** A unique element (`BaseElement` instance) must be passed to the `super()` constructor of every Page class. This element is used internally by `isPageOpened()` (which delegates to the element's safe `state.isDisplayed()` method) to robustly verify the page state.
+4. **Encapsulated Locators:** Locators must never be exposed directly as class properties. They must be wrapped inside custom Element classes (e.g., `this.loginBtn = new Button(...)`).
+5. **Action-Oriented Methods:** Page classes should expose methods that represent user actions (e.g., `typeUsername(name)`, `clickLogin()`).
+6. **No Chaining (No Page Returns):** Page methods must never return an instance of a page (`return this` or `return new NextPage()`). Test flow and navigation are strictly controlled inside the `.spec.js` files.
+7. **No Assertions in Pages:** Page methods must never contain test assertions (no `expect(...)` inside Page classes). All assertions belong in the test file.
 8. **Explicit Waits for Text:** If a test needs to verify text, the Page must provide a method that returns the text string. This method must utilize the element wrapper's `getText()` method, which explicitly waits for the element to be visible before reading its value.
 
 ---
@@ -64,9 +64,9 @@ import BasePage from "#framework/ui/page/BasePage.js";
 // Rule 2: Inherit from BasePage
 export default class LoginPage extends BasePage {
   constructor(page) {
-    // Rule 3: Pass a unique wrapped element to super() to identify the page
-    // Rule 4: Wrap the locator inside a custom Element class (Label)
-    super(new Label(page.getByText('Login Page', { exact: true }), 'Unique header'), 'Login Page');
+    // Rule 3: Pass a unique wrapped element to super() to identify the page.
+    // Tip: Use Regex for partial text matches to avoid brittle, tautological locators.
+    super(new Label(page.getByRole('heading', { name: /Login/i }), 'Unique header'), 'Login Page');
     
     // Rule 1 & 4: Keep locators isolated in the class and encapsulated in wrappers
     this.usernameInput = new TextBox(page.getByLabel('Username'), 'Username input');
@@ -93,6 +93,7 @@ export default class LoginPage extends BasePage {
 Tests manage the flow and hold all assertions. Configuration data is loaded lazily via `ConfigReader`.
 
 ```javascript
+// Thanks to our JSDoc updates in the fixture, IntelliSense works automatically
 import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import LoginPage from './pages/LoginPage.js';
 import ConfigReader from '#framework/utils/ConfigReader.js';

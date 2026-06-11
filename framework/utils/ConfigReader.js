@@ -2,28 +2,36 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Get correct paths for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 class ConfigReader {
+    static _settingsCache = null;
+    static _testDataCache = null;
+
     /**
-     * Lazy load settings.
+     * Lazy load and cache settings to prevent redundant file I/O operations.
      */
     static getSettings() {
-        // path.resolve ensures the path is built relative to the ConfigReader.js location
-        const settingsPath = path.resolve(__dirname, '../config/settings.json');
-        const rawData = fs.readFileSync(settingsPath, 'utf-8');
-        return JSON.parse(rawData);
+        if (!this._settingsCache) {
+            // path.resolve ensures the path is built relative to the ConfigReader.js location
+            const settingsPath = path.resolve(__dirname, '../config/settings.json');
+            const rawData = fs.readFileSync(settingsPath, 'utf-8');
+            this._settingsCache = JSON.parse(rawData);
+        }
+        return this._settingsCache;
     }
 
     /**
-     * Lazy load test data.
+     * Lazy load and cache test data to prevent redundant file I/O operations.
      */
     static getTestData() {
-        const testDataPath = path.resolve(__dirname, '../config/testdata.json');
-        const rawData = fs.readFileSync(testDataPath, 'utf-8');
-        return JSON.parse(rawData);
+        if (!this._testDataCache) {
+            const testDataPath = path.resolve(__dirname, '../config/testdata.json');
+            const rawData = fs.readFileSync(testDataPath, 'utf-8');
+            this._testDataCache = JSON.parse(rawData);
+        }
+        return this._testDataCache;
     }
 
     /**
