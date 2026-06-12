@@ -13,13 +13,13 @@ export default defineConfig({
   reporter: 'list',
 
   use: {
-        // Run in headless mode if in CI or if the environment variable is explicitly set.
-        // When running locally (without variables), headless will be false for easier debugging.
-        headless: process.env.CI ? true : (process.env.HEADLESS === 'true'),
-        
-        trace: 'retain-on-failure',
-        screenshot: 'only-on-failure',
-    },
+    // Run in headless mode if in CI or if the environment variable is explicitly set.
+    // When running locally (without variables), headless will be false for easier debugging.
+    headless: process.env.CI ? true : (process.env.HEADLESS === 'true'),
+    
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+  },
 
   projects: [
     {

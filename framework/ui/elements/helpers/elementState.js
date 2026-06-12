@@ -9,24 +9,27 @@ export default class ElementStateHandler {
 
   /**
    * Internal error handler.
-   * Swallows only timeout errors (indicating the state was not met).
-   * Rethrows all other unexpected errors (strict mode, target closed, invalid selector).
+   * Deterministically identifies timeouts using strictly typed error names 
+   * and specific Playwright assertion patterns, avoiding fragile substring matches.
    * 
    * @param {Error} error 
    * @returns {boolean}
    */
   _handleError(error) {
-    // Rely on Playwright's error name for standard timeouts, 
-    // with a fallback for expect() assertion timeouts.
-    const isTimeout = error.name === 'TimeoutError' || 
-                      error.message.includes('Timeout') || 
-                      error.message.includes('timed out');
-
-    if (isTimeout) {
+    // 1. Native Playwright actions (waitFor, click, etc.) throw a strict TimeoutError class.
+    if (error.name === 'TimeoutError') {
       return false;
     }
     
-    // Rethrow any critical infrastructure or locator errors
+    // 2. Playwright web-first assertions (expect) throw a standard Error, 
+    // but follow a strict and predictable system pattern: "Error: expect(locator).to...: Timeout"
+    const isAssertionTimeout = error.name === 'Error' && /^expect.*?: Timeout/i.test(error.message);
+    
+    if (isAssertionTimeout) {
+      return false;
+    }
+    
+    // Rethrow all other unexpected errors (strict mode, target closed, node detached)
     throw error;
   }
 
@@ -69,8 +72,10 @@ export default class ElementStateHandler {
 
   async isPresent() {
     try {
-      // count() does not wait, but if the locator itself is completely broken (strict mode), 
-      // it will throw an error here.
+      // count() evaluates immediately without waiting.
+      // Note: count() explicitly bypasses strict mode (it just returns the number of elements).
+      // This try/catch is here to safely handle engine-level errors 
+      // (e.g., invalid XPath/CSS syntax or closed browser context).
       return (await this._locator.count()) > 0;
     } catch (error) {
       return this._handleError(error);

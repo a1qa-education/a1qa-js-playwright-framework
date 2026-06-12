@@ -1,4 +1,5 @@
 {
   "baseUrl": "https://the-internet.herokuapp.com",
-  "downloadDir": "downloads"
+  "downloadDir": "downloads",
+  "acceptDownloads": true
 }

@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Get correct paths for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -13,32 +14,33 @@ class ConfigReader {
      * Lazy load and cache settings to prevent redundant file I/O operations.
      */
     static getSettings() {
-        if (!this._settingsCache) {
+        if (!ConfigReader._settingsCache) {
             // path.resolve ensures the path is built relative to the ConfigReader.js location
             const settingsPath = path.resolve(__dirname, '../config/settings.json');
             const rawData = fs.readFileSync(settingsPath, 'utf-8');
-            this._settingsCache = JSON.parse(rawData);
+            ConfigReader._settingsCache = JSON.parse(rawData);
         }
-        return this._settingsCache;
+        return ConfigReader._settingsCache;
     }
 
     /**
      * Lazy load and cache test data to prevent redundant file I/O operations.
      */
     static getTestData() {
-        if (!this._testDataCache) {
+        if (!ConfigReader._testDataCache) {
             const testDataPath = path.resolve(__dirname, '../config/testdata.json');
             const rawData = fs.readFileSync(testDataPath, 'utf-8');
-            this._testDataCache = JSON.parse(rawData);
+            ConfigReader._testDataCache = JSON.parse(rawData);
         }
-        return this._testDataCache;
+        return ConfigReader._testDataCache;
     }
 
     /**
      * Safely get the download directory with a fallback.
      */
     static getDownloadDir() {
-        const settings = this.getSettings();
+        // Use explicit class reference here as well
+        const settings = ConfigReader.getSettings();
         
         // Guard against missing key in config
         if (!settings.downloadDir) {

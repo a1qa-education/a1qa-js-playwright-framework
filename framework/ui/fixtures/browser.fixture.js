@@ -12,18 +12,20 @@ import fs from 'fs';
  * @returns {Function} Fixture function
  */
 function createBrowserFixture(getContextOptions = () => ({})) {
-  // testInfo parameter to access test-specific data
   return async ({ browser }, use, testInfo) => {
-    // Lazy load settings when the test actually starts
     const settings = ConfigReader.getSettings();
     const contextOptions = getContextOptions();
 
-    // Isolate downloads per test to prevent race conditions in parallel execution
     const workerDownloadDir = path.join(testInfo.outputDir, 'downloads');
-    fs.mkdirSync(workerDownloadDir, { recursive: true });
+    
+    // Optimize I/O: Only create the directory if downloads are explicitly enabled in settings
+    if (settings.acceptDownloads) {
+      fs.mkdirSync(workerDownloadDir, { recursive: true });
+    }
 
     const context = await browser.newContext({
-      acceptDownloads: true,
+      // Extract to settings so contexts without download needs don't pay the overhead cost
+      acceptDownloads: settings.acceptDownloads || false,
       ...contextOptions,
     });
     
@@ -35,32 +37,37 @@ function createBrowserFixture(getContextOptions = () => ({})) {
       await myBrowser.openUrl(settings.baseUrl);
     }
     
-    // Pass the browser instance to the test
     await use(myBrowser);
     
     await context.close();
     
-    // Teardown: unconditionally delete the isolated download directory after the test.
-    if (fs.existsSync(workerDownloadDir)) {
+    // Teardown: optimize I/O by only attempting deletion if downloads were enabled
+    if (settings.acceptDownloads && fs.existsSync(workerDownloadDir)) {
       fs.rmSync(workerDownloadDir, { recursive: true, force: true });
     }
   };
 }
 
 /**
+ * Define the shape of our custom fixtures.
  * @typedef {Object} CustomFixtures
  * @property {Browser} customBrowser
  */
 
 /**
- * @type {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>}
+ * Combine Playwright's base arguments with our custom fixtures so IntelliSense works everywhere.
+ * @typedef {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>} CustomTestType
+ */
+
+/**
+ * @type {CustomTestType}
  */
 export const test = base.extend({
   customBrowser: createBrowserFixture(),
 });
 
 /**
- * @type {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>}
+ * @type {CustomTestType}
  */
 export const testWithAuth = base.extend({
   customBrowser: createBrowserFixture(() => ({
