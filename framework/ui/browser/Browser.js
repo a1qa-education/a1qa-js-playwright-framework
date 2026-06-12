@@ -16,11 +16,11 @@ export default class Browser {
         this._pages.push(newPage);
       }
     });
-    
+
     page.context().on('page', (newPage) => {
-        newPage.on('close', () => {
-             this._pages = this._pages.filter(p => p !== newPage);
-        });
+      newPage.on('close', () => {
+        this._pages = this._pages.filter(p => p !== newPage);
+      });
     });
   }
 
@@ -64,7 +64,7 @@ export default class Browser {
     await newPage.waitForLoadState();
     this._currentPage = newPage;
     this._page = newPage;
-    
+
     if (url) await newPage.goto(url);
     return newPage;
   }
@@ -75,10 +75,10 @@ export default class Browser {
     if (index < 0 || index >= this._pages.length) {
       throw new Error(`Tab index ${index} is out of bounds. Open tabs: ${this._pages.length}`);
     }
-    
+
     this._currentPage = this._pages[index];
     this._page = this._currentPage;
-    
+
     await this._page.bringToFront();
   }
 
@@ -101,12 +101,12 @@ export default class Browser {
     const pageToDelete = this._pages[index];
 
     if (!pageToDelete.isClosed()) {
-        await pageToDelete.close();
+      await pageToDelete.close();
     }
-        
+
     if (this._currentPage === pageToDelete) {
-        this._currentPage = this._pages[this._pages.length - 1] || null;
-        this._page = this._currentPage;
+      this._currentPage = this._pages[this._pages.length - 1] || null;
+      this._page = this._currentPage;
     }
   }
 

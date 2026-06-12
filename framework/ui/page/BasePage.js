@@ -1,8 +1,8 @@
-import Timeouts from "../constants/Timeouts.js";
-import BaseElement from "../elements/BaseElement.js";
+import Timeouts from '../constants/Timeouts.js';
+import BaseElement from '../elements/BaseElement.js';
 
 export default class BasePage {
-   /**
+  /**
    * @param {BaseElement} uniqueElement - A unique element that identifies the page
    * @param {string} name - Name of the page for logging/reporting
    */

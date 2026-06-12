@@ -1,5 +1,5 @@
 import BaseElement from './BaseElement.js';
-import ElementType from "../constants/ElementType.js";
+import ElementType from '../constants/ElementType.js';
 
 export class FileInput extends BaseElement {
   constructor(locator, name) {

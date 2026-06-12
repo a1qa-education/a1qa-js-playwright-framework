@@ -1,4 +1,3 @@
-import ElementType from '../constants/ElementType.js';
 import Timeouts from '../constants/Timeouts.js';
 import ElementStateHandler from './helpers/elementState.js';
 
@@ -41,7 +40,7 @@ export default class BaseElement {
     await this.locator.hover();
   }
 
-    /** Wait for element to be visible */
+  /** Wait for element to be visible */
   async waitForDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
     await this.locator.waitFor({ state: 'visible', timeout });
   }

@@ -11,6 +11,7 @@ This repository contains a test automation framework built with **Playwright** a
 * **Element Wrappers:** Custom classes (`Button`, `TextBox`, `Label`, `Checkbox`, `Dropdown`) that encapsulate logging, reliable waits, and strict-mode error handling.
 * **Smart Isolation:** Uses **Test-Scoped Fixtures** to guarantee every test runs in a completely fresh environment (clean cookies, storage, downloads, and context).
 * **Lazy-Loaded & Cached Configuration:** Centralized configuration via `utils/ConfigReader.js` that evaluates at runtime and memoizes results to prevent I/O bottlenecks during parallel execution.
+* **Code Quality & Consistency:** Pre-configured with **ESLint v9 (Flat Config)** enforcing standard JavaScript style (single quotes, 2 spaces) and Playwright-specific rules, complete with auto-formatting on save.
 
 ---
 
@@ -20,6 +21,7 @@ The project strictly separates the reusable technical core (`framework/`) from t
 
 ```text
 a1qa-js-playwright-framework/
+├── .vscode/                 # Editor settings for automatic linting on save
 ├── framework/               # Core Technical Framework
 │   ├── config/              # settings.json, testdata.json
 │   ├── ui/
@@ -32,6 +34,7 @@ a1qa-js-playwright-framework/
 ├── tests/                   # Application-Specific Specs
 │   ├── pages/               # Page Objects (LoginPage, MainPage, etc.)
 │   └── demo.spec.js         # Test Specifications
+├── eslint.config.js         # ESLint v9 Flat Config rules
 └── playwright.config.js     # Playwright engine configuration
 ```
 
@@ -58,8 +61,8 @@ This framework mandates a strict, classic approach to the Page Object pattern to
 Follow the strict rules above when creating a new page.
 
 ```javascript
-import { Button, TextBox, Label } from "#framework/ui/elements/index.js";
-import BasePage from "#framework/ui/page/BasePage.js";
+import { Button, TextBox, Label } from '#framework/ui/elements/index.js';
+import BasePage from '#framework/ui/page/BasePage.js';
 
 // Rule 2: Inherit from BasePage
 export default class LoginPage extends BasePage {
@@ -159,19 +162,30 @@ const filePath = await browser.downloadAndSave(
 
 ---
 
-## ⚙️ Test Execution
+## ⚙️ Test Execution & Linting
 
 **Run all tests in headless mode (default for CI):**
 ```bash
-npx playwright test
+npm run test
 ```
 
 **Run tests locally with browser UI (Headed mode):**
 ```bash
-HEADLESS=false npx playwright test
+HEADLESS=false npm run test
 ```
 
 **Open the interactive UI debug mode:**
 ```bash
 npx playwright test --ui
 ```
+
+**Check code for style and syntax errors:**
+```bash
+npm run lint
+```
+
+**Automatically fix formatting issues (quotes, indentation, semicolons):**
+```bash
+npm run lint:fix
+```
+*(Tip: If using VS Code, formatting is automatically applied on save).*
