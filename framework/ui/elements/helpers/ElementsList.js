@@ -1,9 +1,9 @@
 export class ElementsList {
   /**
-     * @param {import('@playwright/test').Locator} locator
-     * @param {string} name
-     * @param {class} ElementType
-     */
+   * @param {import('@playwright/test').Locator} locator
+   * @param {string} name
+   * @param {class} ElementType
+   */
   constructor(locator, name, ElementType) {
     this.locator = locator;
     this.name = name;
@@ -11,11 +11,11 @@ export class ElementsList {
   }
 
   /**
-     * Get a specific element from the list by index.
-     * Returns an instance of the ElementType (e.g., a new Button).
-     * @param {number} index 
-     * @returns {object} An instance of ElementType
-     */
+   * Get a specific element from the list by index.
+   * Returns an instance of the ElementType (e.g., a new Button).
+   * @param {number} index
+   * @returns {object} An instance of ElementType
+   */
   getByIndex(index) {
     // We create a new instance of the specific element wrapper
     // passing the .nth(index) locator to it.
@@ -24,31 +24,32 @@ export class ElementsList {
   }
 
   /**
-     * Get the number of elements in the list.
-     */
+   * Get the number of elements in the list.
+   */
   async getCount() {
     return await this.locator.count();
   }
 
   /**
-     * Get text content of all elements in the list.
-     * Useful for validation tables/lists.
-     */
+   * Get text content of all elements in the list.
+   * Useful for validation tables/lists.
+   */
   async getAllTexts() {
     const count = await this.getCount();
-        
-    // Wait for the first element to be displayed if the list is not empty
+
     if (count > 0) {
+      // We wait only on the first element (index 0) to ensure the list has started rendering.
+      // This implicitly guarantees the list is ready without the overhead of waiting for every single item.
       await this.getByIndex(0).waitForDisplayed();
     }
-        
+
     return await this.locator.allInnerTexts();
   }
-    
+
   /**
-     * Iterate over the elements and perform an action.
-     * @param {Function} action - Async function taking (element, index)
-     */
+   * Iterate over the elements and perform an action.
+   * @param {Function} action - Async function taking (element, index)
+   */
   async executeForEach(action) {
     const count = await this.getCount();
     for (let i = 0; i < count; i++) {

@@ -34,21 +34,6 @@ class ConfigReader {
     }
     return ConfigReader._testDataCache;
   }
-
-  /**
-     * Safely get the download directory with a fallback.
-     */
-  static getDownloadDir() {
-    // Use explicit class reference here as well
-    const settings = ConfigReader.getSettings();
-        
-    // Guard against missing key in config
-    if (!settings.downloadDir) {
-      return path.resolve(process.cwd(), 'test-results/downloads');
-    }
-        
-    return path.resolve(process.cwd(), settings.downloadDir);
-  }
 }
 
 export default ConfigReader;

@@ -70,7 +70,7 @@ export default class LoginPage extends BasePage {
     // Rule 3: Pass a unique wrapped element to super() to identify the page.
     // Tip: Use Regex for partial text matches to avoid brittle, tautological locators.
     super(new Label(page.getByRole('heading', { name: /Login/i }), 'Unique header'), 'Login Page');
-    
+
     // Rule 1 & 4: Keep locators isolated in the class and encapsulated in wrappers
     this.usernameInput = new TextBox(page.getByLabel('Username'), 'Username input');
     this.loginButton = new Button(page.getByRole('button', { name: 'Login' }), 'Login button');
@@ -87,7 +87,7 @@ export default class LoginPage extends BasePage {
   // Rule 7: No assertions (expect) here. We only return the value.
   // Rule 8: Using the wrapper's getText() ensures an explicit wait before reading.
   async getErrorText() {
-    return await this.errorMessage.getText(); 
+    return await this.errorMessage.getText();
   }
 }
 ```
@@ -104,16 +104,16 @@ import ConfigReader from '#framework/utils/ConfigReader.js';
 // Inject the isolated custom browser fixture
 test('User can see error on invalid login', async ({ customBrowser: browser }) => {
   const testData = ConfigReader.getTestData();
-  
+
   // Rule 1: No locators here. We interact only with the Page Object.
   const loginPage = new LoginPage(browser.page);
-  
+
   // Verify page load using the unique element defined in the constructor
   expect(await loginPage.isPageOpened()).toBe(true);
-  
+
   // Rule 5: Call action-oriented methods to interact with the UI
   await loginPage.login(testData.invalidUser);
-  
+
   // Rule 7 & 8: Assertions are kept in the test, verifying the returned data explicitly
   const errorText = await loginPage.getErrorText();
   expect(errorText).toEqual(testData.invalidCredentialsMessage);
@@ -130,7 +130,7 @@ import { Button } from '#framework/ui/elements/index.js';
 export default class PaymentPage extends BasePage {
   constructor(page) {
     super(...);
-    
+
     // 1. Generate the iframe locator chain using FrameUtils
     const frameLocator = new FrameUtils(page).locatorInFrames(
       ['#payment-gateway-iframe'], // Array of outer -> inner frame selectors

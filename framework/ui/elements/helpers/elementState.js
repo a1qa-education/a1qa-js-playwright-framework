@@ -9,27 +9,20 @@ export default class ElementStateHandler {
 
   /**
    * Internal error handler.
-   * Deterministically identifies timeouts using strictly typed error names 
+   * Deterministically identifies timeouts using strictly typed error names
    * and specific Playwright assertion patterns, avoiding fragile substring matches.
-   * 
-   * @param {Error} error 
+   *
+   * @param {Error} error
    * @returns {boolean}
    */
   _handleError(error) {
-    // 1. Native Playwright actions (waitFor, click, etc.) throw a strict TimeoutError class.
-    if (error.name === 'TimeoutError') {
+    // Playwright web-first assertions attach 'matcherResult' to the error object.
+    // This safely identifies assertion timeouts without brittle string matching.
+    if (error.matcherResult) {
       return false;
     }
-    
-    // 2. Playwright web-first assertions (expect) throw a standard Error, 
-    // but follow a strict and predictable system pattern: "Error: expect(locator).to...: Timeout"
-    const isAssertionTimeout = error.name === 'Error' && /^expect.*?: Timeout/i.test(error.message);
-    
-    if (isAssertionTimeout) {
-      return false;
-    }
-    
-    // Rethrow all other unexpected errors (strict mode, target closed, node detached)
+
+    // Engine-level strict mode violations or closed contexts should fail the test
     throw error;
   }
 
@@ -74,7 +67,7 @@ export default class ElementStateHandler {
     try {
       // count() evaluates immediately without waiting.
       // Note: count() explicitly bypasses strict mode (it just returns the number of elements).
-      // This try/catch is here to safely handle engine-level errors 
+      // This try/catch is here to safely handle engine-level errors
       // (e.g., invalid XPath/CSS syntax or closed browser context).
       return (await this._locator.count()) > 0;
     } catch (error) {

@@ -1,4 +1,5 @@
 import path from 'path';
+import ConfigReader from '#framework/utils/ConfigReader.js';
 
 export default class Browser {
   /**
@@ -60,12 +61,13 @@ export default class Browser {
   }
 
   async newTab(url) {
-    const newPage = await this._currentPage.context().newPage();
-    await newPage.waitForLoadState();
+    const newPage = await this._page.context().newPage();
     this._currentPage = newPage;
-    this._page = newPage;
 
-    if (url) await newPage.goto(url);
+    if (url) {
+      await this.openUrl(url);
+    }
+
     return newPage;
   }
 
@@ -115,6 +117,11 @@ export default class Browser {
   }
 
   async downloadAndSave(action, fileName) {
+    const settings = ConfigReader.getSettings();
+    if (!settings.acceptDownloads) {
+      throw new Error('Downloads are disabled. Set "acceptDownloads": true in settings.json to use downloadAndSave.');
+    }
+
     const [download] = await Promise.all([
       this._page.waitForEvent('download'),
       action(),
