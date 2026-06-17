@@ -36,14 +36,19 @@ export class ElementsList {
 
   /**
    * Gets the text content of all elements in the list, encapsulated within a reporting step.
+   * @param {number} [expectedCount] - Optional expected number of elements. When provided,
+   *   waits until that many elements are present to avoid reading a partially-rendered list.
    * @returns {Promise<Array<string>>}
    */
-  async getAllTexts() {
+  async getAllTexts(expectedCount) {
     return await test.step(`ElementsList '${this.name}' — Get all texts`, async () => {
-      const count = await this.getCount();
-
-      if (count > 0) {
-        await this.getByIndex(0).waitForDisplayed();
+      if (typeof expectedCount === 'number' && expectedCount > 0) {
+        await this.getByIndex(expectedCount - 1).waitForDisplayed();
+      } else {
+        const count = await this.getCount();
+        if (count > 0) {
+          await this.getByIndex(0).waitForDisplayed();
+        }
       }
 
       return await this.locator.allInnerTexts();

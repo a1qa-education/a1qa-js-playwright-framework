@@ -16,7 +16,7 @@ import EnvProvider from '../../utils/EnvProvider.js';
 /**
  * Base custom test fixture providing an isolated Browser wrapper instance.
  * Inherits native Playwright configuration (e.g., viewport, video, acceptDownloads).
- * * @type {CustomTestType}
+ * @type {CustomTestType}
  */
 export const test = base.extend({
   customBrowser: async ({ page, baseURL }, use, testInfo) => {

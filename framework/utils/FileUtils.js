@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import { test } from '@playwright/test';
 
 export default class FileUtils {
@@ -16,9 +16,10 @@ export default class FileUtils {
   static async isFileExists(filePath) {
     return await test.step(`File Utils — Check if file exists: "${filePath}"`, async () => {
       try {
-        return fs.existsSync(filePath);
+        await fs.access(filePath);
+        return true;
       } catch (error) {
-        throw new Error(`Could not verify file existence at ${filePath}`, { cause: error });
+        return false;
       }
     });
   }
@@ -30,8 +31,10 @@ export default class FileUtils {
    */
   static async ensureDirectoryExists(dirPath) {
     await test.step(`File Utils — Ensure directory exists: "${dirPath}"`, async () => {
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
+      try {
+        await fs.access(dirPath);
+      } catch (error) {
+        await fs.mkdir(dirPath, { recursive: true });
       }
     });
   }

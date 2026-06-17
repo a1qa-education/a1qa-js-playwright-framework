@@ -7,9 +7,8 @@ export default class MainPage extends BasePage {
       new Label(page.getByRole('heading', { name: /Welcome to the-internet/i, level: 1 }), 'Main Page Header'),
       'Main Page'
     );
-    this.navigationLink = (text) => new Label(this.page.getByRole('link', { name: text }), `Navigation link: ${text}`);
-
     this.page = page;
+    this.navigationLink = (text) => new Label(this.page.getByRole('link', { name: text }), `Navigation link: ${text}`);
   }
 
   async clickNavigationLink(navigationText) {

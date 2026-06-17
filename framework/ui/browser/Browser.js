@@ -1,6 +1,5 @@
 import path from 'path';
 import { test } from '@playwright/test';
-import ConfigReader from '#framework/utils/ConfigReader.js';
 
 export default class Browser {
   /**
@@ -11,6 +10,7 @@ export default class Browser {
   constructor(page, downloadDir) {
     this._page = page;
     this._pages = [page];
+    this._page.on('close', () => { this._pages = this._pages.filter(p => p !== this._page); });
     this._downloadDir = downloadDir;
 
     // Subscribe to the 'page' event to track newly opened tabs
@@ -92,14 +92,11 @@ export default class Browser {
    */
   async acceptAlert(actionCallback) {
     await test.step('Browser — Accept alert dialog', async () => {
-      const listener = async (dialog) => await dialog.accept();
-      this._page.on('dialog', listener);
-
-      try {
-        await actionCallback();
-      } finally {
-        this._page.off('dialog', listener);
-      }
+      const [dialog] = await Promise.all([
+        this._page.waitForEvent('dialog'),
+        actionCallback(),
+      ]);
+      await dialog.accept();
     });
   }
 
@@ -111,6 +108,11 @@ export default class Browser {
   async newTab(url) {
     return await test.step(url ? `Browser — Open new tab and navigate to: "${url}"` : 'Browser — Open new tab', async () => {
       const newPage = await this._page.context().newPage();
+
+      // Explicitly add to tracking in case the context 'page' event hasn't fired yet
+      if (!this._pages.includes(newPage)) {
+        this._pages.push(newPage);
+      }
 
       // Update the active page reference immediately
       this._page = newPage;
@@ -175,14 +177,11 @@ export default class Browser {
       }
 
       const pageToDelete = this._pages[index];
+      if (!pageToDelete.isClosed()) await pageToDelete.close();
 
-      if (!pageToDelete.isClosed()) {
-        await pageToDelete.close();
-      }
-
-      // If the active tab was just closed, shift focus to the last available tab
-      if (this._page === pageToDelete) {
-        this._page = this._pages[this._pages.length - 1] || null;
+      this._pages = this._pages.filter(p => !p.isClosed());
+      if (this._page?.isClosed()) {
+        this._page = this._pages.at(-1) ?? null;
       }
     });
   }
@@ -205,11 +204,6 @@ export default class Browser {
    */
   async downloadAndSave(action, fileName) {
     return await test.step(`Browser — Download and save file: "${fileName}"`, async () => {
-      const settings = ConfigReader.getSettings();
-      if (!settings.acceptDownloads) {
-        throw new Error('Downloads are disabled. Set "acceptDownloads": true in settings.json to use downloadAndSave.');
-      }
-
       const [download] = await Promise.all([
         this._page.waitForEvent('download'),
         action(),

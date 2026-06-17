@@ -1,4 +1,4 @@
-import { Button, Label } from '#framework/ui/elements/index.js';
+import { Label } from '#framework/ui/elements/index.js';
 import BasePage from '#framework/ui/page/BasePage.js';
 
 export default class SecureAreaPage extends BasePage {
@@ -8,7 +8,7 @@ export default class SecureAreaPage extends BasePage {
       page.getByRole('heading', { name: /Welcome to the Secure Area/i }),
       'Success message'
     );
-    this.logoutButton = new Button(page.getByText('Logout', { exact: true }), 'Logout button');
+    this.logoutButton = new Label(page.getByText('Logout', { exact: true }), 'Logout link');
   }
 
   async getMessageText() {

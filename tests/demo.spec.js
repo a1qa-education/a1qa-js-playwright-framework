@@ -12,16 +12,19 @@ test('demo test for a successful login', async ({ customBrowser: browser }) => {
   await mainPage.clickNavigationLink('Form Authentication');
 
   const loginPage = new LoginPage(browser.page);
+  await loginPage.waitForPageToLoad();
   expect(await loginPage.isPageOpened()).toBe(true);
   await loginPage.typeUsername(EnvProvider.testUser);
   await loginPage.typePassword(EnvProvider.testPassword);
   await loginPage.clickLoginButton();
 
   const secureAreaPage = new SecureAreaPage(browser.page);
+  await secureAreaPage.waitForPageToLoad();
   expect(await secureAreaPage.isPageOpened()).toBe(true);
   const message = await secureAreaPage.getMessageText();
   expect(message).toEqual(testData.loginSuccessMessage);
 
   await secureAreaPage.clickLogoutButton();
+  await loginPage.waitForPageToLoad();
   expect(await loginPage.isPageOpened()).toBe(true);
 });

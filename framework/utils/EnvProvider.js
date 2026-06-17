@@ -1,3 +1,10 @@
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Self-contained .env bootstrap — works whether loaded via playwright.config.js or standalone.
+// dotenv.config() is idempotent: it will not overwrite vars already set by the config or the shell.
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
 export default class EnvProvider {
   /**
    * Retrieves an environment variable by name.
