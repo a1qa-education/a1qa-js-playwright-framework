@@ -4,6 +4,7 @@ import MainPage from './pages/MainPage.js';
 import LoginPage from './pages/LoginPage.js';
 import SecureAreaPage from './pages/SecureAreaPage.js';
 import ConfigReader from '#framework/utils/ConfigReader.js';
+import EnvProvider from '#framework/utils/EnvProvider.js';
 
 test('demo test for a successful login', async ({ customBrowser: browser }) => {
   const testData = ConfigReader.getTestData();
@@ -12,8 +13,8 @@ test('demo test for a successful login', async ({ customBrowser: browser }) => {
 
   const loginPage = new LoginPage(browser.page);
   expect(await loginPage.isPageOpened()).toBe(true);
-  await loginPage.typeUsername(testData.loginCredentials.user);
-  await loginPage.typePassword(testData.loginCredentials.password);
+  await loginPage.typeUsername(EnvProvider.testUser);
+  await loginPage.typePassword(EnvProvider.testPassword);
   await loginPage.clickLoginButton();
 
   const secureAreaPage = new SecureAreaPage(browser.page);

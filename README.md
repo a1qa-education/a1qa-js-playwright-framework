@@ -6,12 +6,13 @@ This repository contains a test automation framework built with **Playwright** a
 
 ## 🚀 Features
 
-* **Playwright Native:** Fast, reliable execution on Chromium, Firefox, and WebKit.
+* **Playwright Native:** Fast, reliable parallel execution on Chromium, Firefox, and WebKit managed natively via `playwright.config.js`.
 * **Strict Page Object Model:** Enforces absolute encapsulation of locators and state.
-* **Element Wrappers:** Custom classes (`Button`, `TextBox`, `Label`, `Checkbox`, `Dropdown`) that encapsulate logging, reliable waits, and strict-mode error handling.
-* **Smart Isolation:** Uses **Test-Scoped Fixtures** to guarantee every test runs in a completely fresh environment (clean cookies, storage, downloads, and context).
-* **Lazy-Loaded & Cached Configuration:** Centralized configuration via `utils/ConfigReader.js` that evaluates at runtime and memoizes results to prevent I/O bottlenecks during parallel execution.
-* **Code Quality & Consistency:** Pre-configured with **ESLint v9 (Flat Config)** enforcing standard JavaScript style (single quotes, 2 spaces) and Playwright-specific rules, complete with auto-formatting on save.
+* **Element Wrappers:** Custom classes (`Button`, `TextBox`, `Label`, `Checkbox`, `Dropdown`) that encapsulate **Playwright native reporting steps (`test.step`)**, reliable waits, and strict-mode error handling.
+* **Smart Isolation:** Uses **Test-Scoped Fixtures** to guarantee every test runs in a completely fresh environment (clean context, downloads, and optional Basic Auth injection).
+* **Secure Secrets Management:** Centralized environment variable validation via `utils/EnvProvider.js` prevents hardcoded credentials and silent failures.
+* **Lazy-Loaded Configuration:** Safe test data is loaded lazily via `utils/ConfigReader.js` that evaluates at runtime and memoizes results to prevent I/O bottlenecks.
+* **Code Quality & Consistency:** Pre-configured with **ESLint v10 (Flat Config)** enforcing standard JavaScript style (single quotes, 2 spaces) and Playwright-specific rules.
 
 ---
 
@@ -23,20 +24,43 @@ The project strictly separates the reusable technical core (`framework/`) from t
 a1qa-js-playwright-framework/
 ├── .vscode/                 # Editor settings for automatic linting on save
 ├── framework/               # Core Technical Framework
-│   ├── config/              # settings.json, testdata.json
+│   ├── config/              # testdata.json (Non-sensitive structural data)
 │   ├── ui/
-│   │   ├── browser/         # Browser.js wrapper
+│   │   ├── browser/         # Browser.js wrapper (Single state manager)
 │   │   ├── constants/       # ElementType.js, Timeouts.js
-│   │   ├── elements/        # UI Element wrappers (Button, Label, etc.)
-│   │   ├── fixtures/        # Playwright test extensions
+│   │   ├── elements/        # UI Element wrappers (Button, Label, ElementsList, etc.)
+│   │   ├── fixtures/        # Playwright test extensions (browser.fixture.js)
 │   │   └── page/            # BasePage.js
-│   └── utils/               # ConfigReader.js, FileUtils.js, FrameUtils.js
+│   └── utils/               # ConfigReader.js, EnvProvider.js, FileUtils.js, FrameUtils.js
 ├── tests/                   # Application-Specific Specs
 │   ├── pages/               # Page Objects (LoginPage, MainPage, etc.)
 │   └── demo.spec.js         # Test Specifications
-├── eslint.config.js         # ESLint v9 Flat Config rules
-└── playwright.config.js     # Playwright engine configuration
+├── .env.example             # Template for required environment variables
+├── eslint.config.js         # ESLint v10 Flat Config rules
+└── playwright.config.js     # Playwright engine and multi-browser configuration
 ```
+
+---
+
+## 🔒 Environment Setup (Secrets Management)
+
+This framework strictly prohibits committing sensitive passwords or credentials to the repository. Instead, it relies on local environment variables.
+
+Before running the tests for the first time, every developer/student must configure their local environment:
+
+1. Locate the `.env.example` file in the root directory.
+2. Duplicate this file and rename the copy to `.env` (this file is ignored by Git and will remain safely on your local machine).
+3. Open your new `.env` file and populate it with the actual credentials required for the test environments:
+
+```env
+TEST_USER=tomsmith
+TEST_PASSWORD=SuperSecretPassword!
+
+BASIC_AUTH_USER=admin
+BASIC_AUTH_PASSWORD=admin
+```
+
+If you forget to set this up or miss a variable, the framework's `EnvProvider` will explicitly halt test execution and warn you to check your `.env` file.
 
 ---
 
@@ -46,7 +70,7 @@ This framework mandates a strict, classic approach to the Page Object pattern to
 
 1. **Selector Isolation:** All interactions with locators and selectors must happen exclusively inside Page classes. Tests (`.spec.js` files) must never contain `page.locator()` or `page.getBy...`.
 2. **Inheritance:** Every application page class must inherit directly from `BasePage`.
-3. **Unique Page Elements:** A unique element (`BaseElement` instance) must be passed to the `super()` constructor of every Page class. This element is used internally by `isPageOpened()` (which delegates to the element's safe `state.isDisplayed()` method) to robustly verify the page state.
+3. **Unique Page Elements:** A unique element (`BaseElement` instance) must be passed to the `super()` constructor of every Page class. This element is used internally by `isPageOpened()` to robustly verify the page state via a fast, non-blocking check.
 4. **Encapsulated Locators:** Locators must never be exposed directly as class properties. They must be wrapped inside custom Element classes (e.g., `this.loginBtn = new Button(...)`).
 5. **Action-Oriented Methods:** Page classes should expose methods that represent user actions (e.g., `typeUsername(name)`, `clickLogin()`).
 6. **No Chaining (No Page Returns):** Page methods must never return an instance of a page (`return this` or `return new NextPage()`). Test flow and navigation are strictly controlled inside the `.spec.js` files.
@@ -68,7 +92,7 @@ import BasePage from '#framework/ui/page/BasePage.js';
 export default class LoginPage extends BasePage {
   constructor(page) {
     // Rule 3: Pass a unique wrapped element to super() to identify the page.
-    // Tip: Use Regex for partial text matches to avoid brittle, tautological locators.
+    // Tip: Use Regex for partial text matches to avoid brittle locators.
     super(new Label(page.getByRole('heading', { name: /Login/i }), 'Unique header'), 'Login Page');
 
     // Rule 1 & 4: Keep locators isolated in the class and encapsulated in wrappers
@@ -79,8 +103,9 @@ export default class LoginPage extends BasePage {
 
   // Rule 5: Methods represent clear user actions
   // Rule 6: The method returns Promise<void>, NOT an instance of another page
-  async login(username) {
+  async login(username, password) {
     await this.usernameInput.typeText(username);
+    // Password input logic here...
     await this.loginButton.click();
   }
 
@@ -93,13 +118,14 @@ export default class LoginPage extends BasePage {
 ```
 
 ### 2. Writing a Test
-Tests manage the flow and hold all assertions. Configuration data is loaded lazily via `ConfigReader`.
+Tests manage the flow and hold all assertions. Safe structural data is loaded via `ConfigReader`, while sensitive credentials must be accessed via `EnvProvider`.
 
 ```javascript
 // Thanks to our JSDoc updates in the fixture, IntelliSense works automatically
 import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import LoginPage from './pages/LoginPage.js';
 import ConfigReader from '#framework/utils/ConfigReader.js';
+import EnvProvider from '#framework/utils/EnvProvider.js';
 
 // Inject the isolated custom browser fixture
 test('User can see error on invalid login', async ({ customBrowser: browser }) => {
@@ -111,8 +137,9 @@ test('User can see error on invalid login', async ({ customBrowser: browser }) =
   // Verify page load using the unique element defined in the constructor
   expect(await loginPage.isPageOpened()).toBe(true);
 
-  // Rule 5: Call action-oriented methods to interact with the UI
-  await loginPage.login(testData.invalidUser);
+  // Rule 5: Call action-oriented methods to interact with the UI.
+  // Use EnvProvider for sensitive data injected from .env
+  await loginPage.login(EnvProvider.testUser, EnvProvider.testPassword);
 
   // Rule 7 & 8: Assertions are kept in the test, verifying the returned data explicitly
   const errorText = await loginPage.getErrorText();
@@ -157,21 +184,26 @@ const filePath = await browser.downloadAndSave(
   'invoice.pdf'                         // Desired filename
 );
 
-// File is safely deleted after the test passes to save disk space
+// Files are safely retained on test failure and deleted on success to save disk space
 ```
 
 ---
 
 ## ⚙️ Test Execution & Linting
 
-**Run all tests in headless mode (default for CI):**
+**Run all tests in headless mode across all browsers (default for CI):**
 ```bash
 npm run test
 ```
 
-**Run tests locally with browser UI (Headed mode):**
+**Run tests on a specific browser:**
 ```bash
-HEADLESS=false npm run test
+BROWSER=firefox npm run test
+```
+
+**Run tests locally with a maximized browser window (Headed mode):**
+```bash
+BROWSER=local-headed npm run test
 ```
 
 **Open the interactive UI debug mode:**
@@ -184,8 +216,4 @@ npx playwright test --ui
 npm run lint
 ```
 
-**Automatically fix formatting issues (quotes, indentation, semicolons):**
-```bash
-npm run lint:fix
-```
-*(Tip: If using VS Code, formatting is automatically applied on save).*
+*(Tip: If using VS Code, formatting and ESLint rules are automatically applied on save).*

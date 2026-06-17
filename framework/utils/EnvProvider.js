@@ -1,0 +1,27 @@
+export default class EnvProvider {
+  /**
+   * Retrieves an environment variable by name.
+   * Throws an explicit error if the variable is missing to prevent silent failures.
+   * @param {string} name
+   * @returns {string}
+   */
+  static _requireEnv(name) {
+    const value = process.env[name];
+    if (!value) {
+      throw new Error(`CRITICAL: Environment variable "${name}" is missing! Please check your .env file.`);
+    }
+    return value;
+  }
+
+  /**
+   * Standard login credentials.
+   */
+  static get testUser() { return this._requireEnv('TEST_USER'); }
+  static get testPassword() { return this._requireEnv('TEST_PASSWORD'); }
+
+  /**
+   * Credentials for Basic Authentication popups.
+   */
+  static get basicAuthUser() { return this._requireEnv('BASIC_AUTH_USER'); }
+  static get basicAuthPassword() { return this._requireEnv('BASIC_AUTH_PASSWORD'); }
+}

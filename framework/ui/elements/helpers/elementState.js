@@ -1,7 +1,12 @@
-import { expect } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import Timeouts from '../../constants/Timeouts.js';
 
 export default class ElementStateHandler {
+  /**
+   * Initializes the state handler for an element.
+   * @param {import('@playwright/test').Locator} locator
+   * @param {string} name
+   */
   constructor(locator, name) {
     this._locator = locator;
     this._name = name;
@@ -16,62 +21,88 @@ export default class ElementStateHandler {
    * @returns {boolean}
    */
   _handleError(error) {
-    // Playwright web-first assertions attach 'matcherResult' to the error object.
-    // This safely identifies assertion timeouts without brittle string matching.
     if (error.matcherResult) {
       return false;
     }
-
-    // Engine-level strict mode violations or closed contexts should fail the test
     throw error;
   }
 
+  /**
+   * Checks if the element is enabled, encapsulated within a reporting step.
+   * @param {number} timeout
+   * @returns {Promise<boolean>}
+   */
   async isEnabled(timeout = Timeouts.EXPLICIT_WAIT) {
-    try {
-      await expect(this._locator).toBeEnabled({ timeout });
-      return true;
-    } catch (error) {
-      return this._handleError(error);
-    }
+    return await test.step(`State check: Is '${this._name}' enabled?`, async () => {
+      try {
+        await expect(this._locator).toBeEnabled({ timeout });
+        return true;
+      } catch (error) {
+        return this._handleError(error);
+      }
+    });
   }
 
+  /**
+   * Checks if the element is displayed, encapsulated within a reporting step.
+   * @param {number} timeout
+   * @returns {Promise<boolean>}
+   */
   async isDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
-    try {
-      await expect(this._locator).toBeVisible({ timeout });
-      return true;
-    } catch (error) {
-      return this._handleError(error);
-    }
+    return await test.step(`State check: Is '${this._name}' displayed?`, async () => {
+      try {
+        await expect(this._locator).toBeVisible({ timeout });
+        return true;
+      } catch (error) {
+        return this._handleError(error);
+      }
+    });
   }
 
+  /**
+   * Checks if the element is clickable, encapsulated within a reporting step.
+   * @param {number} timeout
+   * @returns {Promise<boolean>}
+   */
   async isClickable(timeout = Timeouts.EXPLICIT_WAIT) {
-    try {
-      await expect(this._locator).toBeVisible({ timeout });
-      await expect(this._locator).toBeEnabled({ timeout });
-      return true;
-    } catch (error) {
-      return this._handleError(error);
-    }
+    return await test.step(`State check: Is '${this._name}' clickable?`, async () => {
+      try {
+        await expect(this._locator).toBeVisible({ timeout });
+        await expect(this._locator).toBeEnabled({ timeout });
+        return true;
+      } catch (error) {
+        return this._handleError(error);
+      }
+    });
   }
 
+  /**
+   * Checks if the element is selected, encapsulated within a reporting step.
+   * @param {number} timeout
+   * @returns {Promise<boolean>}
+   */
   async isSelected(timeout = Timeouts.EXPLICIT_WAIT) {
-    try {
-      await expect(this._locator).toBeChecked({ timeout });
-      return true;
-    } catch (error) {
-      return this._handleError(error);
-    }
+    return await test.step(`State check: Is '${this._name}' selected?`, async () => {
+      try {
+        await expect(this._locator).toBeChecked({ timeout });
+        return true;
+      } catch (error) {
+        return this._handleError(error);
+      }
+    });
   }
 
+  /**
+   * Checks if the element is present in the DOM, encapsulated within a reporting step.
+   * @returns {Promise<boolean>}
+   */
   async isPresent() {
-    try {
-      // count() evaluates immediately without waiting.
-      // Note: count() explicitly bypasses strict mode (it just returns the number of elements).
-      // This try/catch is here to safely handle engine-level errors
-      // (e.g., invalid XPath/CSS syntax or closed browser context).
-      return (await this._locator.count()) > 0;
-    } catch (error) {
-      return this._handleError(error);
-    }
+    return await test.step(`State check: Is '${this._name}' present?`, async () => {
+      try {
+        return (await this._locator.count()) > 0;
+      } catch (error) {
+        return this._handleError(error);
+      }
+    });
   }
 }

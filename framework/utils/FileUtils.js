@@ -1,37 +1,38 @@
 import fs from 'fs';
+import { test } from '@playwright/test';
 
-/**
- * Utilities for file system operations.
- */
-class FileUtils {
+export default class FileUtils {
   /**
-   * Checks if a file exists at the specified path.
+   * Checks if a file exists at the specified path, encapsulated within a reporting step.
    * Do not use this function alone for assertions!
    * Wrap it in expect.poll for stable checks (eliminates flaky tests).
    *
    * @example
-   * await expect.poll(() => FileUtils.isFileExists(filePath)).toBeTruthy();
+   * await expect.poll(async () => await FileUtils.isFileExists(filePath)).toBeTruthy();
    *
    * @param {string} filePath - Absolute path to the file.
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
-  static isFileExists(filePath) {
-    try {
-      return fs.existsSync(filePath);
-    } catch (error) {
-      throw new Error(`Could not verify file existence at ${filePath}`, { cause: error });
-    }
+  static async isFileExists(filePath) {
+    return await test.step(`File Utils — Check if file exists: "${filePath}"`, async () => {
+      try {
+        return fs.existsSync(filePath);
+      } catch (error) {
+        throw new Error(`Could not verify file existence at ${filePath}`, { cause: error });
+      }
+    });
   }
 
   /**
-   * Safely creates a directory if it does not exist.
+   * Safely creates a directory if it does not exist, encapsulated within a reporting step.
    * @param {string} dirPath - Path to the directory.
+   * @returns {Promise<void>}
    */
-  static ensureDirectoryExists(dirPath) {
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath, { recursive: true });
-    }
+  static async ensureDirectoryExists(dirPath) {
+    await test.step(`File Utils — Ensure directory exists: "${dirPath}"`, async () => {
+      if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+      }
+    });
   }
 }
-
-export default FileUtils;

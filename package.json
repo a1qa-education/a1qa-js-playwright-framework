@@ -1,25 +1,27 @@
 {
-  "type": "module",
   "name": "a1qa-js-playwright-framework",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "UI Test Automation Framework using Playwright",
+  "author": "a1qa",
+  "type": "module",
   "imports": {
     "#framework/*": "./framework/*"
   },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "test": "playwright test",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "eslint ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.57.0",
     "@types/node": "^24.10.2",
     "eslint": "^10.4.1",
     "eslint-plugin-playwright": "^2.10.4"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }

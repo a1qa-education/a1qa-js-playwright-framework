@@ -2,6 +2,10 @@ import js from '@eslint/js';
 import playwright from 'eslint-plugin-playwright';
 
 export default [
+  {
+    ignores: ['test-results/', 'playwright-report/', 'blob-report/', 'playwright/.cache/']
+  },
+
   // Base recommended JavaScript rules
   js.configs.recommended,
 
@@ -9,7 +13,6 @@ export default [
   playwright.configs['flat/recommended'],
 
   {
-    // Apply rules to all JS files
     files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
@@ -21,14 +24,12 @@ export default [
       }
     },
     rules: {
-      // Stylistic rules
-      'indent': ['error', 2, { 'SwitchCase': 1 }], // Strictly 2 spaces
-      'quotes': ['error', 'single'],               // Strictly single quotes
-      'semi': ['error', 'always'],                 // Strictly semicolons
+      'indent': ['error', 2, { 'SwitchCase': 1 }],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'always'],
 
-      // Useful relaxations
-      'no-unused-vars': 'warn',                    // Warn instead of failing on unused variables
-      'playwright/no-wait-for-timeout': 'error',    // Error if someone uses hard sleeps (page.waitForTimeout)
+      'no-unused-vars': 'warn',
+      'playwright/no-wait-for-timeout': 'error',
 
       'playwright/no-conditional-in-test': 'off'
     }

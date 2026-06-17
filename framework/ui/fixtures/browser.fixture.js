@@ -1,78 +1,58 @@
 import { test as base, expect } from '@playwright/test';
 import Browser from '../browser/Browser.js';
-import ConfigReader from '../../utils/ConfigReader.js';
+import fs from 'fs/promises';
 import path from 'path';
-import fs from 'fs';
+import EnvProvider from '../../utils/EnvProvider.js';
 
 /**
- * Helper function to create a browser fixture with optional context options.
- * Uses a callback for contextOptions to enable lazy loading of configuration data.
- * 
- * @param {Function} getContextOptions - Function returning options to pass to browser.newContext()
- * @returns {Function} Fixture function
- */
-function createBrowserFixture(getContextOptions = () => ({})) {
-  return async ({ browser }, use, testInfo) => {
-    const settings = ConfigReader.getSettings();
-    const contextOptions = getContextOptions();
-
-    const workerDownloadDir = path.join(testInfo.outputDir, 'downloads');
-    
-    // Optimize I/O: Only create the directory if downloads are explicitly enabled in settings
-    if (settings.acceptDownloads) {
-      fs.mkdirSync(workerDownloadDir, { recursive: true });
-    }
-
-    const context = await browser.newContext({
-      // Extract to settings so contexts without download needs don't pay the overhead cost
-      acceptDownloads: settings.acceptDownloads || false,
-      ...contextOptions,
-    });
-    
-    const page = await context.newPage();
-    
-    const myBrowser = new Browser(page, workerDownloadDir);
-
-    if (settings.baseUrl) {
-      await myBrowser.openUrl(settings.baseUrl);
-    }
-    
-    await use(myBrowser);
-    
-    await context.close();
-    
-    // Teardown: optimize I/O by only attempting deletion if downloads were enabled
-    if (settings.acceptDownloads && fs.existsSync(workerDownloadDir)) {
-      fs.rmSync(workerDownloadDir, { recursive: true, force: true });
-    }
-  };
-}
-
-/**
- * Define the shape of our custom fixtures.
  * @typedef {Object} CustomFixtures
  * @property {Browser} customBrowser
  */
 
 /**
- * Combine Playwright's base arguments with our custom fixtures so IntelliSense works everywhere.
  * @typedef {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>} CustomTestType
  */
 
 /**
- * @type {CustomTestType}
+ * Base custom test fixture providing an isolated Browser wrapper instance.
+ * Inherits native Playwright configuration (e.g., viewport, video, acceptDownloads).
+ * * @type {CustomTestType}
  */
 export const test = base.extend({
-  customBrowser: createBrowserFixture(),
+  customBrowser: async ({ page, baseURL }, use, testInfo) => {
+    const workerDownloadDir = path.join(testInfo.outputDir, 'downloads');
+
+    await fs.mkdir(workerDownloadDir, { recursive: true });
+
+    const myBrowser = new Browser(page, workerDownloadDir);
+
+    if (baseURL) {
+      await myBrowser.openUrl(baseURL);
+    }
+
+    await use(myBrowser);
+
+    // Retain download artifacts for failed tests to aid debugging
+    if (testInfo.status === 'passed') {
+      await fs.rm(workerDownloadDir, { recursive: true, force: true }).catch(() => {});
+    }
+  },
 });
 
 /**
+ * Extended test fixture that pre-configures Basic Authentication for the context.
  * @type {CustomTestType}
  */
-export const testWithAuth = base.extend({
-  customBrowser: createBrowserFixture(() => ({
-    httpCredentials: ConfigReader.getTestData().basicAuthCredentials
-  })),
+export const testWithAuth = test.extend({
+  httpCredentials: [
+    async ({}, use) => {
+      await use({
+        username: EnvProvider.basicAuthUser,
+        password: EnvProvider.basicAuthPassword,
+      });
+    },
+    { option: true }
+  ]
 });
 
 export { expect };
