@@ -8,7 +8,7 @@ This repository contains a test automation framework built with **Playwright** a
 
 * **Playwright Native:** Fast, reliable parallel execution on Chromium, Firefox, and WebKit managed natively via `playwright.config.js`.
 * **Strict Page Object Model:** Enforces absolute encapsulation of locators and state.
-* **Element Wrappers:** Custom classes (`Button`, `TextBox`, `Label`, `Checkbox`, `Dropdown`) that encapsulate **Playwright native reporting steps (`test.step`)**, reliable waits, and strict-mode error handling.
+* **Element Wrappers:** Custom classes (`Button`, `TextBox`, `Label`, `Checkbox`, `Dropdown`, `FileInput`) that encapsulate **Playwright native reporting steps (`test.step`)**, reliable waits, and strict-mode error handling. An `ElementsList` utility is also provided for managing collections of identical elements.
 * **Smart Isolation:** Uses **Test-Scoped Fixtures** to guarantee every test runs in a completely fresh environment (clean context, downloads, and optional Basic Auth injection).
 * **Secure Secrets Management:** Centralized environment variable validation via `utils/EnvProvider.js` prevents hardcoded credentials and silent failures.
 * **Lazy-Loaded Configuration:** Safe test data is loaded lazily via `utils/ConfigReader.js` that evaluates at runtime and memoizes results to prevent I/O bottlenecks.
@@ -134,7 +134,9 @@ test('User can see error on invalid login', async ({ customBrowser: browser }) =
   // Rule 1: No locators here. We interact only with the Page Object.
   const loginPage = new LoginPage(browser.page);
 
-  // Verify page load using the unique element defined in the constructor
+  // Always wait for the page to load before asserting visibility.
+  // isPageOpened() is a fast non-blocking snapshot — it does NOT auto-wait.
+  await loginPage.waitForPageToLoad();
   expect(await loginPage.isPageOpened()).toBe(true);
 
   // Rule 5: Call action-oriented methods to interact with the UI.
