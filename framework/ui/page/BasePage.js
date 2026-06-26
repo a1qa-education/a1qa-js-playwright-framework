@@ -41,7 +41,7 @@ export default class BasePage {
    */
   async isPageOpened() {
     return await test.step(`Page '${this._name}' — Check if opened`, async () => {
-      return await this.uniqueElement.locator.isVisible();
+      return await this.uniqueElement.state.isVisible();
     });
   }
 }

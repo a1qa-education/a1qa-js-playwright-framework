@@ -52,7 +52,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
 
-    baseURL: 'https://the-internet.herokuapp.com',
+    baseURL: process.env.BASE_URL || 'https://the-internet.herokuapp.com',
     acceptDownloads: true,
   },
 

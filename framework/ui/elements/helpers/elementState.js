@@ -60,6 +60,17 @@ export default class ElementStateHandler {
   }
 
   /**
+   * Performs a zero-timeout, non-retrying visibility snapshot, encapsulated within a reporting step.
+   * Unlike isDisplayed(), this does NOT auto-retry — it returns the element's visibility at the instant of the call.
+   * @returns {Promise<boolean>}
+   */
+  async isVisible() {
+    return await test.step(`State check: Is '${this._name}' visible? (instant)`, async () => {
+      return await this._locator.isVisible();
+    });
+  }
+
+  /**
    * Checks if the element is clickable, encapsulated within a reporting step.
    * @param {number} timeout
    * @returns {Promise<boolean>}

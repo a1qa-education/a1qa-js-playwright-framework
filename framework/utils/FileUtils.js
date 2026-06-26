@@ -18,7 +18,7 @@ export default class FileUtils {
       try {
         await fs.access(filePath);
         return true;
-      } catch (error) {
+      } catch {
         return false;
       }
     });
@@ -33,7 +33,7 @@ export default class FileUtils {
     await test.step(`File Utils — Ensure directory exists: "${dirPath}"`, async () => {
       try {
         await fs.access(dirPath);
-      } catch (error) {
+      } catch {
         await fs.mkdir(dirPath, { recursive: true });
       }
     });
