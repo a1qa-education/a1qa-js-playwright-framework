@@ -104,7 +104,7 @@ export default class LoginPage extends BasePage {
   // Rule 5: Methods represent clear user actions
   // Rule 6: The method returns Promise<void>, NOT an instance of another page
   async login(username, password) {
-    await this.usernameInput.typeText(username);
+    await this.usernameInput.setText(username);
     // Password input logic here...
     await this.loginButton.click();
   }

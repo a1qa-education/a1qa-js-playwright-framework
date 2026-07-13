@@ -10,11 +10,11 @@ export default class LoginPage extends BasePage {
   }
 
   async typeUsername(username) {
-    await this.usernameInput.typeText(username);
+    await this.usernameInput.setText(username);
   }
 
   async typePassword(password) {
-    await this.passwordInput.typeText(password);
+    await this.passwordInput.setText(password);
   }
 
   async clickLoginButton() {

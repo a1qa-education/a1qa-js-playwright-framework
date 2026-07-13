@@ -14,12 +14,25 @@ export class TextBox extends BaseElement {
   }
 
   /**
-   * Types text into the element, encapsulated within a reporting step.
+   * Types text into the element character by character, simulating real keyboard input.
+   * Useful for inputs with real-time validation, autocomplete, debounced search, or character masks.
    * @param {string} text - Text to type
    * @returns {Promise<void>}
    */
   async typeText(text) {
     await test.step(`${this._type} '${this._name}' — Type text: "${text}"`, async () => {
+      await this.locator.pressSequentially(text);
+    });
+  }
+
+  /**
+   * Sets the value of the input element programmatically (equivalent to pasting).
+   * Faster than typeText(), but does not trigger per-character keyboard events.
+   * @param {string} text - Text to set
+   * @returns {Promise<void>}
+   */
+  async setText(text) {
+    await test.step(`${this._type} '${this._name}' — Set text: "${text}"`, async () => {
       await this.locator.fill(text);
     });
   }
