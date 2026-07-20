@@ -4,7 +4,7 @@ import { Label, FileInput, Button } from '#framework/ui/elements/index.js';
 export default class FileUploaderPage extends BasePage {
   constructor(page) {
     super(new Label(page.getByText('File Uploader'), 'File Uploader page unique element'), 'File Uploader Page');
-    this.fileInput = new FileInput(page.locator('#file-upload', 'File input'));
+    this.fileInput = new FileInput(page.locator('#file-upload'), 'File input');
     this.uploadButton = new Button(page.getByRole('button', { name: 'Upload' }), 'Upload button');
   }
 
