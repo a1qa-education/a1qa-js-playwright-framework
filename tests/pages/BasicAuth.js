@@ -3,7 +3,7 @@ import { Label } from '#framework/ui/elements/index.js';
 
 export default class BasicAuth extends BasePage {
   constructor(page) {
-    super(new Label(page.getByText("Basic Auth"), 'basic auth page unique element'), 'Basic Auth Page');
+    super(new Label(page.getByRole('heading', { name: "Basic Auth" }), 'basic auth page unique element'), 'Basic Auth Page');
     // Add elements to interact with
   }
 

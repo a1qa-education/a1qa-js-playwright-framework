@@ -3,7 +3,7 @@ import { Label } from '#framework/ui/elements/index.js';
 
 export default class NewWindowPage extends BasePage {
   constructor(page) {
-    super(new Label(page.getByText('New Window'), 'New Window page unique element'), 'New Window Page');
+    super(new Label(page.locator('.example h3'), 'New Window page unique element'), 'New Window Page');
     this.newWindowTextLabel = new Label(page.locator('.example h3'), 'New Window Text Label');
   }
 

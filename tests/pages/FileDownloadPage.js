@@ -3,8 +3,8 @@ import { Label } from '#framework/ui/elements/index.js';
 
 export default class FileDownloadPage extends BasePage {
   constructor(page) {
-    super(new Label(page.getByText('File Downloader'), 'File Download Page unique element'), 'File Download Page');
-    this.fileLabel = (text) => new Label(page.getByText(text, { exact: true }), 'File label');
+    super(new Label(page.getByRole('heading', { name: 'File Downloader' }), 'File Download Page unique element'), 'File Download Page');
+    this.fileLabel = (text) => new Label(page.getByRole('link', { name: text, exact: true }), 'File label');
   }
 
   async isFileLabelDisplayed(fileName) {
