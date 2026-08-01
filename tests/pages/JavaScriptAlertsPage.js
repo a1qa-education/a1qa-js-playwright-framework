@@ -3,8 +3,8 @@ import { Button, Label } from '#framework/ui/elements/index.js';
 
 export default class JavaScriptAlertsPage extends BasePage {
   constructor(page) {
-    super(new Label(page.getByText('JavaScript Alerts'), 'JavaScript Alerts page unique element'), 'JavaScript Alerts Page');
-    // Add elements to interect with
+    super(new Label(page.getByRole('heading', { name: 'JavaScript Alerts' }), 'JavaScript Alerts page unique element'), 'JavaScript Alerts Page');
+    // Add elements to interact with
 
   }
 

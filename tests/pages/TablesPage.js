@@ -6,10 +6,10 @@ export default class TablesPage extends BasePage {
   constructor(page) {
     // Change call of super() constructor to approriate one
     super();
-    
+
     this.dueCells = new ElementsList(
-        page.locator('//*[@id="table1"]//td[4]'), 
-        'Due column cells', 
+        page.locator('#table1 td:nth-child(4)'),
+        'Due column cells',
         Label
     );
   }
