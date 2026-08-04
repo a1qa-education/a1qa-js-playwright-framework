@@ -1,0 +1,15 @@
+{
+    "cucumber.features": [
+        "tests/features/**/*.feature"
+    ],
+    "cucumber.glue": [
+        "tests/steps/**/*.js",
+        "tests/support/**/*.js"
+    ],
+    "cucumber.parameterTypes": [
+        {
+            "name": "string",
+            "regexp": "\"[^\"]*\""
+        }
+    ]
+}
