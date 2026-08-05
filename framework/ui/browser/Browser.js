@@ -1,5 +1,5 @@
 import path from 'path';
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 
 export default class Browser {
   /**
@@ -40,7 +40,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async openUrl(url) {
-    await step(`Browser — Open URL: "${url}"`, async () => {
+    await Logger.step(`Browser — Open URL: "${url}"`, async () => {
       await this._page.goto(url);
     });
   }
@@ -50,7 +50,7 @@ export default class Browser {
    * @returns {Promise<string>}
    */
   async getCurrentUrl() {
-    return await step('Browser — Get current URL', async () => {
+    return await Logger.step('Browser — Get current URL', async () => {
       return this._page.url();
     });
   }
@@ -60,7 +60,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async refresh() {
-    await step('Browser — Refresh page', async () => {
+    await Logger.step('Browser — Refresh page', async () => {
       await this._page.reload();
     });
   }
@@ -70,7 +70,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async navigateBack() {
-    await step('Browser — Navigate back', async () => {
+    await Logger.step('Browser — Navigate back', async () => {
       await this._page.goBack();
     });
   }
@@ -80,7 +80,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async navigateForward() {
-    await step('Browser — Navigate forward', async () => {
+    await Logger.step('Browser — Navigate forward', async () => {
       await this._page.goForward();
     });
   }
@@ -91,7 +91,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async acceptAlert(actionCallback) {
-    await step('Browser — Accept alert dialog', async () => {
+    await Logger.step('Browser — Accept alert dialog', async () => {
       const listener = async (dialog) => await dialog.accept();
       this._page.on('dialog', listener);
 
@@ -109,7 +109,7 @@ export default class Browser {
    * @returns {Promise<import('@playwright/test').Page>}
    */
   async newTab(url) {
-    return await step(url ? `Browser — Open new tab and navigate to: "${url}"` : 'Browser — Open new tab', async () => {
+    return await Logger.step(url ? `Browser — Open new tab and navigate to: "${url}"` : 'Browser — Open new tab', async () => {
       const newPage = await this._page.context().newPage();
 
       // Explicitly add to tracking in case the context 'page' event hasn't fired yet
@@ -134,7 +134,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async switchToTab(index) {
-    await step(`Browser — Switch to tab index [${index}]`, async () => {
+    await Logger.step(`Browser — Switch to tab index [${index}]`, async () => {
       this._pages = this._pages.filter(p => !p.isClosed());
 
       if (index < 0 || index >= this._pages.length) {
@@ -153,7 +153,7 @@ export default class Browser {
    * @returns {Promise<import('@playwright/test').Page>}
    */
   async openLinkInNewTab(clickCallback) {
-    return await step('Browser — Open link in new tab', async () => {
+    return await Logger.step('Browser — Open link in new tab', async () => {
       const context = this._page.context();
       const [newPage] = await Promise.all([
         context.waitForEvent('page'),
@@ -174,7 +174,7 @@ export default class Browser {
    * @returns {Promise<void>}
    */
   async closeTab(index) {
-    await step(`Browser — Close tab index [${index}]`, async () => {
+    await Logger.step(`Browser — Close tab index [${index}]`, async () => {
       if (index < 0 || index >= this._pages.length) {
         throw new Error(`Tab index ${index} is out of bounds. Open tabs: ${this._pages.length}`);
       }
@@ -194,7 +194,7 @@ export default class Browser {
    * @returns {Promise<number>}
    */
   async getTabsCount() {
-    return await step('Browser — Get tabs count', async () => {
+    return await Logger.step('Browser — Get tabs count', async () => {
       return this._pages.filter(p => !p.isClosed()).length;
     });
   }
@@ -206,7 +206,7 @@ export default class Browser {
    * @returns {Promise<string>}
    */
   async downloadAndSave(action, fileName) {
-    return await step(`Browser — Download and save file: "${fileName}"`, async () => {
+    return await Logger.step(`Browser — Download and save file: "${fileName}"`, async () => {
       const [download] = await Promise.all([
         this._page.waitForEvent('download'),
         action(),

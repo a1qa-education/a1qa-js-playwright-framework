@@ -3,6 +3,10 @@ import Browser from '../browser/Browser.js';
 import fs from 'fs/promises';
 import path from 'path';
 import EnvProvider from '../../utils/EnvProvider.js';
+import Logger from '../../utils/Logger.js';
+
+// Configure the generic Logger to use Playwright's native test.step() for HTML reporting
+Logger.configure(async (title, body) => await test.step(title, body));
 
 /**
  * @typedef {Object} CustomFixtures

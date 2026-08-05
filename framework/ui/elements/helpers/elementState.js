@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 import Timeouts from '../../constants/Timeouts.js';
 
 export default class ElementStateHandler {
@@ -34,7 +34,7 @@ export default class ElementStateHandler {
    * @returns {Promise<boolean>}
    */
   async isEnabled(timeout = Timeouts.EXPLICIT_WAIT) {
-    return await step(`State check: Is '${this._name}' enabled?`, async () => {
+    return await Logger.step(`State check: Is '${this._name}' enabled?`, async () => {
       try {
         await expect(this._locator).toBeEnabled({ timeout });
         return true;
@@ -50,7 +50,7 @@ export default class ElementStateHandler {
    * @returns {Promise<boolean>}
    */
   async isDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
-    return await step(`State check: Is '${this._name}' displayed?`, async () => {
+    return await Logger.step(`State check: Is '${this._name}' displayed?`, async () => {
       try {
         await expect(this._locator).toBeVisible({ timeout });
         return true;
@@ -66,7 +66,7 @@ export default class ElementStateHandler {
    * @returns {Promise<boolean>}
    */
   async isVisible() {
-    return await step(`State check: Is '${this._name}' visible? (instant)`, async () => {
+    return await Logger.step(`State check: Is '${this._name}' visible? (instant)`, async () => {
       return await this._locator.isVisible();
     });
   }
@@ -77,7 +77,7 @@ export default class ElementStateHandler {
    * @returns {Promise<boolean>}
    */
   async isClickable(timeout = Timeouts.EXPLICIT_WAIT) {
-    return await step(`State check: Is '${this._name}' clickable?`, async () => {
+    return await Logger.step(`State check: Is '${this._name}' clickable?`, async () => {
       try {
         await expect(this._locator).toBeVisible({ timeout });
         await expect(this._locator).toBeEnabled({ timeout });
@@ -94,7 +94,7 @@ export default class ElementStateHandler {
    * @returns {Promise<boolean>}
    */
   async isSelected(timeout = Timeouts.EXPLICIT_WAIT) {
-    return await step(`State check: Is '${this._name}' selected?`, async () => {
+    return await Logger.step(`State check: Is '${this._name}' selected?`, async () => {
       try {
         await expect(this._locator).toBeChecked({ timeout });
         return true;
@@ -109,7 +109,7 @@ export default class ElementStateHandler {
    * @returns {Promise<boolean>}
    */
   async isPresent() {
-    return await step(`State check: Is '${this._name}' present?`, async () => {
+    return await Logger.step(`State check: Is '${this._name}' present?`, async () => {
       try {
         return (await this._locator.count()) > 0;
       } catch (error) {

@@ -1,4 +1,4 @@
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 import Timeouts from '../constants/Timeouts.js';
 import ElementStateHandler from './helpers/elementState.js';
 
@@ -26,7 +26,7 @@ export default class BaseElement {
    * @returns {Promise<void>}
    */
   async click() {
-    await step(`${this._type} '${this._name}' — Click`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Click`, async () => {
       await this.locator.click();
     });
   }
@@ -36,7 +36,7 @@ export default class BaseElement {
    * @returns {Promise<string>}
    */
   async getText() {
-    return await step(`${this._type} '${this._name}' — Get text`, async () => {
+    return await Logger.step(`${this._type} '${this._name}' — Get text`, async () => {
       await this.waitForDisplayed();
       return await this.locator.innerText();
     });
@@ -47,7 +47,7 @@ export default class BaseElement {
    * @returns {Promise<void>}
    */
   async moveTo() {
-    await step(`${this._type} '${this._name}' — Hover`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Hover`, async () => {
       await this.locator.hover();
     });
   }
@@ -58,7 +58,7 @@ export default class BaseElement {
    * @returns {Promise<void>}
    */
   async waitForDisplayed(timeout = Timeouts.EXPLICIT_WAIT) {
-    await step(`${this._type} '${this._name}' — Wait for element to be displayed`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Wait for element to be displayed`, async () => {
       await this.locator.waitFor({ state: 'visible', timeout });
     });
   }

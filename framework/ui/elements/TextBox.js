@@ -1,4 +1,4 @@
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 import ElementType from '../constants/ElementType.js';
 import BaseElement from './BaseElement.js';
 
@@ -20,7 +20,7 @@ export class TextBox extends BaseElement {
    * @returns {Promise<void>}
    */
   async typeText(text) {
-    await step(`${this._type} '${this._name}' — Type text: "${text}"`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Type text: "${text}"`, async () => {
       await this.locator.pressSequentially(text);
     });
   }
@@ -32,7 +32,7 @@ export class TextBox extends BaseElement {
    * @returns {Promise<void>}
    */
   async setText(text) {
-    await step(`${this._type} '${this._name}' — Set text: "${text}"`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Set text: "${text}"`, async () => {
       await this.locator.fill(text);
     });
   }
@@ -42,7 +42,7 @@ export class TextBox extends BaseElement {
    * @returns {Promise<string>} Value from element
    */
   async getValue() {
-    return await step(`${this._type} '${this._name}' — Get value`, async () => {
+    return await Logger.step(`${this._type} '${this._name}' — Get value`, async () => {
       return await this.locator.inputValue();
     });
   }

@@ -1,4 +1,4 @@
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 
 export class ElementsList {
   /**
@@ -29,7 +29,7 @@ export class ElementsList {
    * @returns {Promise<number>}
    */
   async getCount() {
-    return await step(`ElementsList '${this.name}' — Get count`, async () => {
+    return await Logger.step(`ElementsList '${this.name}' — Get count`, async () => {
       return await this.locator.count();
     });
   }
@@ -41,7 +41,7 @@ export class ElementsList {
    * @returns {Promise<Array<string>>}
    */
   async getAllTexts(expectedCount) {
-    return await step(`ElementsList '${this.name}' — Get all texts`, async () => {
+    return await Logger.step(`ElementsList '${this.name}' — Get all texts`, async () => {
       if (typeof expectedCount === 'number' && expectedCount > 0) {
         await this.getByIndex(expectedCount - 1).waitForDisplayed();
       } else {
@@ -61,7 +61,7 @@ export class ElementsList {
    * @returns {Promise<void>}
    */
   async executeForEach(action) {
-    await step(`ElementsList '${this.name}' — Execute action for each element`, async () => {
+    await Logger.step(`ElementsList '${this.name}' — Execute action for each element`, async () => {
       const count = await this.getCount();
       for (let i = 0; i < count; i++) {
         const element = this.getByIndex(i);

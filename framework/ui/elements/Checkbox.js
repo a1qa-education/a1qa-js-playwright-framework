@@ -1,4 +1,4 @@
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 import ElementType from '../constants/ElementType.js';
 import BaseElement from './BaseElement.js';
 
@@ -18,7 +18,7 @@ export class Checkbox extends BaseElement {
    * @returns {Promise<void>}
    */
   async check() {
-    await step(`${this._type} '${this._name}' — Check`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Check`, async () => {
       await this.locator.check();
     });
   }
@@ -28,7 +28,7 @@ export class Checkbox extends BaseElement {
    * @returns {Promise<void>}
    */
   async uncheck() {
-    await step(`${this._type} '${this._name}' — Uncheck`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Uncheck`, async () => {
       await this.locator.uncheck();
     });
   }

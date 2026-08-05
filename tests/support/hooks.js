@@ -2,8 +2,16 @@ import { Before, After, setDefaultTimeout, Status } from '@cucumber/cucumber';
 import { chromium, firefox, webkit } from '@playwright/test';
 import Browser from '#framework/ui/browser/Browser.js';
 import EnvProvider from '#framework/utils/EnvProvider.js';
+import Logger from '#framework/utils/Logger.js';
 import path from 'path';
 import fs from 'fs';
+
+// Configure the generic Logger for Cucumber runs (terminal output + silent execution)
+Logger.configure(async (title, body) => {
+  // Uncomment to see steps in terminal, or leave as silent execution:
+  // console.log(`  → ${title}`);
+  return await body();
+});
 
 const BASE_URL = process.env.BASE_URL || 'https://the-internet.herokuapp.com';
 const DOWNLOAD_DIR = path.resolve('downloads');

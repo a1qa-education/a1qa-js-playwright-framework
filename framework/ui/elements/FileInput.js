@@ -1,4 +1,4 @@
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 import BaseElement from './BaseElement.js';
 import ElementType from '../constants/ElementType.js';
 
@@ -19,7 +19,7 @@ export class FileInput extends BaseElement {
    * @returns {Promise<void>}
    */
   async uploadFile(filePath) {
-    await step(`${this._type} '${this._name}' — Upload file: "${filePath}"`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Upload file: "${filePath}"`, async () => {
       await this.locator.setInputFiles(filePath);
     });
   }
@@ -29,7 +29,7 @@ export class FileInput extends BaseElement {
    * @returns {Promise<void>}
    */
   async clear() {
-    await step(`${this._type} '${this._name}' — Clear file input`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Clear file input`, async () => {
       await this.locator.setInputFiles([]);
     });
   }

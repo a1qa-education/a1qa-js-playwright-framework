@@ -1,4 +1,4 @@
-import { step } from '#framework/utils/stepHelper.js';
+import Logger from '#framework/utils/Logger.js';
 import ElementType from '../constants/ElementType.js';
 import BaseElement from './BaseElement.js';
 
@@ -19,7 +19,7 @@ export class Dropdown extends BaseElement {
    * @returns {Promise<void>}
    */
   async selectOption(option) {
-    await step(`${this._type} '${this._name}' — Select option: "${option}"`, async () => {
+    await Logger.step(`${this._type} '${this._name}' — Select option: "${option}"`, async () => {
       await this.locator.selectOption(option);
     });
   }

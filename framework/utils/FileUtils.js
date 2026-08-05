@@ -1,9 +1,8 @@
 import fs from 'fs/promises';
-import { step } from '#framework/utils/stepHelper.js';
 
 export default class FileUtils {
   /**
-   * Checks if a file exists at the specified path, encapsulated within a reporting step.
+   * Checks if a file exists at the specified path.
    * Do not use this function alone for assertions!
    * Wrap it in expect.poll for stable checks (eliminates flaky tests).
    *
@@ -14,28 +13,24 @@ export default class FileUtils {
    * @returns {Promise<boolean>}
    */
   static async isFileExists(filePath) {
-    return await step(`File Utils — Check if file exists: "${filePath}"`, async () => {
-      try {
-        await fs.access(filePath);
-        return true;
-      } catch {
-        return false;
-      }
-    });
+    try {
+      await fs.access(filePath);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /**
-   * Safely creates a directory if it does not exist, encapsulated within a reporting step.
+   * Safely creates a directory if it does not exist.
    * @param {string} dirPath - Path to the directory.
    * @returns {Promise<void>}
    */
   static async ensureDirectoryExists(dirPath) {
-    await step(`File Utils — Ensure directory exists: "${dirPath}"`, async () => {
-      try {
-        await fs.access(dirPath);
-      } catch {
-        await fs.mkdir(dirPath, { recursive: true });
-      }
-    });
+    try {
+      await fs.access(dirPath);
+    } catch {
+      await fs.mkdir(dirPath, { recursive: true });
+    }
   }
 }
