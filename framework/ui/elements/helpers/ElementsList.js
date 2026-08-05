@@ -1,52 +1,72 @@
+import { step } from '#framework/utils/stepHelper.js';
+
 export class ElementsList {
-    /**
-     * @param {import('@playwright/test').Locator} locator
-     * @param {string} name
-     * @param {class} ElementType
-     */
-    constructor(locator, name, ElementType) {
-        this.locator = locator;
-        this.name = name;
-        this.ElementType = ElementType;
-    }
+  /**
+   * Initializes an ElementsList to manage multiple identical elements.
+   * @param {import('@playwright/test').Locator} locator
+   * @param {string} name
+   * @param {class} ElementType
+   */
+  constructor(locator, name, ElementType) {
+    this.locator = locator;
+    this.name = name;
+    this.ElementType = ElementType;
+  }
 
-    /**
-     * Get a specific element from the list by index.
-     * Returns an instance of the ElementType (e.g., a new Button).
-     * @param {number} index 
-     * @returns {object} An instance of ElementType
-     */
-    getByIndex(index) {
-        // We create a new instance of the specific element wrapper
-        // passing the .nth(index) locator to it.
-        const specificLocator = this.locator.nth(index);
-        return new this.ElementType(specificLocator, `${this.name} [${index}]`);
-    }
+  /**
+   * Gets a specific element from the list by index.
+   * Returns an instance of the ElementType (e.g., a new Button).
+   * @param {number} index
+   * @returns {object} An instance of ElementType
+   */
+  getByIndex(index) {
+    const specificLocator = this.locator.nth(index);
+    return new this.ElementType(specificLocator, `${this.name} [${index}]`);
+  }
 
-    /**
-     * Get the number of elements in the list.
-     */
-    async getCount() {
-        return await this.locator.count();
-    }
+  /**
+   * Gets the number of elements in the list, encapsulated within a reporting step.
+   * @returns {Promise<number>}
+   */
+  async getCount() {
+    return await step(`ElementsList '${this.name}' — Get count`, async () => {
+      return await this.locator.count();
+    });
+  }
 
-    /**
-     * Get text content of all elements in the list.
-     * Useful for validation tables/lists.
-     */
-    async getAllTexts() {
-        return await this.locator.allInnerTexts();
-    }
-    
-    /**
-     * Iterate over the elements and perform an action.
-     * @param {Function} action - Async function taking (element, index)
-     */
-    async executeForEach(action) {
+  /**
+   * Gets the text content of all elements in the list, encapsulated within a reporting step.
+   * @param {number} [expectedCount] - Optional expected number of elements. When provided,
+   *   waits until that many elements are present to avoid reading a partially-rendered list.
+   * @returns {Promise<Array<string>>}
+   */
+  async getAllTexts(expectedCount) {
+    return await step(`ElementsList '${this.name}' — Get all texts`, async () => {
+      if (typeof expectedCount === 'number' && expectedCount > 0) {
+        await this.getByIndex(expectedCount - 1).waitForDisplayed();
+      } else {
         const count = await this.getCount();
-        for (let i = 0; i < count; i++) {
-            const element = this.getByIndex(i);
-            await action(element, i);
+        if (count > 0) {
+          await this.getByIndex(0).waitForDisplayed();
         }
-    }
+      }
+
+      return await this.locator.allInnerTexts();
+    });
+  }
+
+  /**
+   * Iterates over the elements and performs an action, encapsulated within a reporting step.
+   * @param {Function} action - Async function taking (element, index)
+   * @returns {Promise<void>}
+   */
+  async executeForEach(action) {
+    await step(`ElementsList '${this.name}' — Execute action for each element`, async () => {
+      const count = await this.getCount();
+      for (let i = 0; i < count; i++) {
+        const element = this.getByIndex(i);
+        await action(element, i);
+      }
+    });
+  }
 }

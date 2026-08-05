@@ -1,37 +1,60 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
 
-const browserName = process.env.BROWSER || 'chromium';
+// Load .env early so all env vars are available for config and framework code.
+// dotenv.config() will not overwrite vars already set in the shell/CI environment.
+dotenv.config();
+
 const isCI = !!process.env.CI;
+const targetBrowser = process.env.BROWSER || 'chromium';
+
+const allProjects = [
+  {
+    name: 'chromium',
+    use: { ...devices['Desktop Chrome'] },
+  },
+  {
+    name: 'firefox',
+    use: { ...devices['Desktop Firefox'] },
+  },
+  {
+    name: 'webkit',
+    use: { ...devices['Desktop Safari'] },
+  },
+  {
+    name: 'local-headed',
+    use: {
+      browserName: 'chromium',
+      headless: false,
+      viewport: null,
+      launchOptions: {
+        args: ['--start-maximized'],
+      },
+    },
+  },
+];
 
 export default defineConfig({
   testDir: './tests',
-
+  fullyParallel: true,
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
   workers: isCI ? 1 : undefined,
 
-  forbidOnly: isCI,
-
-  reporter: 'list',
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ...(isCI ? [['junit', { outputFile: 'results.xml' }]] : [])
+  ],
 
   use: {
+    headless: isCI ? true : (process.env.HEADLESS !== 'false'),
     trace: 'retain-on-failure',
-    video: 'on-first-retry',
     screenshot: 'only-on-failure',
 
-    headless: false,
-    viewport: null,
+    baseURL: process.env.BASE_URL || 'https://the-internet.herokuapp.com',
+    acceptDownloads: true,
   },
 
-  projects: [
-    {
-      name: browserName,
-      use: {
-        browserName,
-        headless: false,
-        viewport: null,
-        launchOptions: {
-          args: browserName === 'chromium' ? ['--start-maximized'] : [],
-        },
-      },
-    },
-  ],
+  projects: targetBrowser === 'all' ? allProjects : allProjects.filter(p => p.name === targetBrowser),
 });

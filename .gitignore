@@ -9,3 +9,7 @@ node_modules/
 /reports/
 /allure-results/
 /allure-report/
+
+# Environment & Downloads
+.env
+downloads/

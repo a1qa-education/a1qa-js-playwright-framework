@@ -1,23 +1,30 @@
 {
-  "type": "module",
   "name": "a1qa-js-playwright-framework",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "UI Test Automation Framework using Playwright",
+  "author": "a1qa",
+  "type": "module",
   "imports": {
     "#framework/*": "./framework/*"
   },
-  "scripts": {
-    "test:bdd": "cucumber-js"
+  "engines": {
+    "node": ">=20.19.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "test": "playwright test",
+    "test:bdd": "cucumber-js",
+    "lint": "eslint ."
+  },
   "devDependencies": {
     "@cucumber/cucumber": "^12.6.0",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.58.2",
     "@types/node": "^24.10.13",
     "allure-cucumberjs": "^3.4.5",
-    "ts-node": "^10.9.2"
+    "eslint": "^10.4.1",
+    "eslint-plugin-playwright": "^2.10.4"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }
