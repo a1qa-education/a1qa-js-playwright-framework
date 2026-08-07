@@ -92,11 +92,14 @@ export default class Browser {
    */
   async acceptAlert(actionCallback) {
     await test.step('Browser — Accept alert dialog', async () => {
-      const [dialog] = await Promise.all([
-        this._page.waitForEvent('dialog'),
-        actionCallback(),
-      ]);
-      await dialog.accept();
+      const listener = async (dialog) => await dialog.accept();
+      this._page.on('dialog', listener);
+
+      try {
+        await actionCallback();
+      } finally {
+        this._page.off('dialog', listener);
+      }
     });
   }
 
