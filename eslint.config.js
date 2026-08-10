@@ -21,6 +21,9 @@ export default [
         console: 'readonly',
         process: 'readonly',
         setTimeout: 'readonly',
+        // Available inside locator.evaluate() / page.evaluate() callbacks, which run in the browser
+        window: 'readonly',
+        document: 'readonly',
       }
     },
     rules: {

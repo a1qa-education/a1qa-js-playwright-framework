@@ -33,10 +33,7 @@ test('cards test', async ({ customBrowser: browser }) => {
   await interestsForm.waitForPageToLoad();
   expect(await interestsForm.isPageOpened()).toBe(true);
   await interestsForm.clickRandomInterests(numberOfInterestsToSelect);
-  await browser.uploadFileWithChooser(
-    () => interestsForm.clickUploadButton(),
-    testData.fileForUpload
-  );
+  await interestsForm.uploadAvatar(testData.fileForUpload);
   await interestsForm.clickNextButton();
 
   const personalDetailsForm = mainPage.personalDetailsForm;

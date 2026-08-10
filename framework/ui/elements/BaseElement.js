@@ -43,6 +43,20 @@ export default class BaseElement {
   }
 
   /**
+   * Retrieves the computed value of a CSS property of the element, encapsulated within a reporting step.
+   * @param {string} propertyName - Name of the CSS property, e.g. 'height'
+   * @returns {Promise<string>} The computed value, e.g. '228px'
+   */
+  async getCssProperty(propertyName) {
+    return await test.step(`${this._type} '${this._name}' — Get CSS property '${propertyName}'`, async () => {
+      return await this.locator.evaluate(
+        (element, property) => window.getComputedStyle(element).getPropertyValue(property),
+        propertyName
+      );
+    });
+  }
+
+  /**
    * Moves the mouse cursor over the element encapsulated within a reporting step.
    * @returns {Promise<void>}
    */

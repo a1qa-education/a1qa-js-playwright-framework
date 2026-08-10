@@ -25,6 +25,24 @@ export class FileInput extends BaseElement {
   }
 
   /**
+   * Clicks the element and passes the file to the file chooser it opens, encapsulated within a reporting step.
+   * Use this when the upload control is not an <input type="file"> element and the page exposes
+   * no file input to target, so uploadFile() cannot be used.
+   * @param {string|string[]} filePath - Path(s) of the file(s) to upload
+   * @returns {Promise<void>}
+   */
+  async uploadFileWithChooser(filePath) {
+    await test.step(`${this._type} '${this._name}' — Upload file through the file chooser: "${filePath}"`, async () => {
+      const [fileChooser] = await Promise.all([
+        this.locator.page().waitForEvent('filechooser'),
+        this.locator.click(),
+      ]);
+
+      await fileChooser.setFiles(filePath);
+    });
+  }
+
+  /**
    * Clears the file input element, encapsulated within a reporting step.
    * @returns {Promise<void>}
    */

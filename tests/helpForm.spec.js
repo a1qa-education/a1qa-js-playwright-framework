@@ -2,7 +2,7 @@ import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import MainPage from './pages/MainPage.js';
 import WelcomePage from './pages/WelcomePage.js';
 
-test('help form test', async ({ customBrowser: browser }) => {
+test('help form can be collapsed', async ({ customBrowser: browser }) => {
   const welcomePage = new WelcomePage(browser.page);
   await welcomePage.clickHereToGoLink();
 

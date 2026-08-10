@@ -218,23 +218,4 @@ export default class Browser {
       return filePath;
     });
   }
-
-  /**
-   * Waits for a file chooser triggered by the action and supplies the file to it,
-   * encapsulated within a reporting step.
-   * Use this when the upload control is not an `input[type=file]` element.
-   * @param {Function} action - Action that opens the file chooser
-   * @param {string|string[]} filePath - Path(s) of the file(s) to upload
-   * @returns {Promise<void>}
-   */
-  async uploadFileWithChooser(action, filePath) {
-    await test.step(`Browser — Upload file with chooser: "${filePath}"`, async () => {
-      const [fileChooser] = await Promise.all([
-        this._page.waitForEvent('filechooser'),
-        action(),
-      ]);
-
-      await fileChooser.setFiles(filePath);
-    });
-  }
 }
