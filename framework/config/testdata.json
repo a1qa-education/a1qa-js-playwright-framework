@@ -1,13 +1,5 @@
 {
   "loginSuccessMessage": "Welcome to the Secure Area. When you are done click logout below.",
-  "loginCredentials": {
-    "user": "",
-    "password": ""
-  },
-  "basicAuthCredentials": {
-    "username": "",
-    "password": ""
-  },
   "successfulBasicAuthMessage": "Congratulations! You must have the proper credentials.",
   "fileForUpload": "",
   "downloadFileName": ""

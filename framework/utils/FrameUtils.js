@@ -7,6 +7,7 @@ export default class FrameUtils {
    * Resolve a locator inside nested frames
    * @param {string[]} frameSelectors - ordered outer → inner
    * @param {string} targetSelector
+   * @returns {import('@playwright/test').Locator}
    */
   locatorInFrames(frameSelectors, targetSelector) {
     let frame = this.page;
@@ -16,11 +17,5 @@ export default class FrameUtils {
     }
 
     return frame.locator(targetSelector);
-  }
-
-  async getText(frameSelectors, targetSelector) {
-    const locator = this.locatorInFrames(frameSelectors, targetSelector);
-    await locator.waitFor({ state: 'attached' });
-    return locator.innerText();
   }
 }

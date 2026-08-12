@@ -1,49 +1,62 @@
 import { test as base, expect } from '@playwright/test';
 import Browser from '../browser/Browser.js';
-import { settings, testData } from '../../utils/ConfigReader.js';
+import fs from 'fs/promises';
 import path from 'path';
-import fs from 'fs';
+import EnvProvider from '../../utils/EnvProvider.js';
+import Logger from '../../utils/Logger.js';
 
-const DOWNLOAD_DIR = path.resolve(settings.downloadDir);
+// Configure the generic Logger to use Playwright's native test.step() for HTML reporting
+Logger.configure(async (title, body) => await test.step(title, body));
 
 /**
- * Helper function to create a browser fixture with optional context options
- * @param {object} contextOptions - Options to pass to browser.newContext()
- * @returns {Function} Fixture function
+ * @typedef {Object} CustomFixtures
+ * @property {Browser} customBrowser
  */
-function createBrowserFixture(contextOptions = {}) {
-  return async ({ browser }, use) => {
-    fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
-
-    const context = await browser.newContext({
-      acceptDownloads: true,
-      downloadsPath: DOWNLOAD_DIR,
-      ...contextOptions,
-    });
-    const page = await context.newPage();
-    const myBrowser = new Browser(page);
-
-    if (settings.baseUrl) {
-      await myBrowser.openUrl(settings.baseUrl);
-    }
-    await use(myBrowser);
-    await context.close();
-    
-    fs.rmSync(DOWNLOAD_DIR, { recursive: true, force: true });
-  };
-}
 
 /**
- * @type {import('@playwright/test').TestType<{ customBrowser: Browser }>} 
+ * @typedef {import('@playwright/test').TestType<import('@playwright/test').PlaywrightTestArgs & import('@playwright/test').PlaywrightTestOptions & CustomFixtures>} CustomTestType
+ */
+
+/**
+ * Base custom test fixture providing an isolated Browser wrapper instance.
+ * Inherits native Playwright configuration (e.g., viewport, video, acceptDownloads).
+ * @type {CustomTestType}
  */
 export const test = base.extend({
-  customBrowser: createBrowserFixture(),
+  customBrowser: async ({ page, baseURL }, use, testInfo) => {
+    const workerDownloadDir = path.join(testInfo.outputDir, 'downloads');
+
+    await fs.mkdir(workerDownloadDir, { recursive: true });
+
+    const myBrowser = new Browser(page, workerDownloadDir);
+
+    if (baseURL) {
+      await myBrowser.openUrl(baseURL);
+    }
+
+    await use(myBrowser);
+
+    // Retain download artifacts for failed tests to aid debugging
+    if (testInfo.status === 'passed') {
+      await fs.rm(workerDownloadDir, { recursive: true, force: true }).catch(() => {});
+    }
+  },
 });
 
-export const testWithAuth = base.extend({
-  customBrowser: createBrowserFixture({
-    httpCredentials: testData.basicAuthCredentials
-  }),
+/**
+ * Extended test fixture that pre-configures Basic Authentication for the context.
+ * @type {CustomTestType}
+ */
+export const testWithAuth = test.extend({
+  httpCredentials: [
+    async ({}, use) => {
+      await use({
+        username: EnvProvider.basicAuthUser,
+        password: EnvProvider.basicAuthPassword,
+      });
+    },
+    { option: true }
+  ]
 });
 
 export { expect };
