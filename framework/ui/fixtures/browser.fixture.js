@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test';
+import { createPageFactory } from './pageFactory.js';
 import Browser from '../browser/Browser.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -36,6 +37,11 @@ export const test = base.extend({
     if (testInfo.status === 'passed') {
       await fs.rm(workerDownloadDir, { recursive: true, force: true }).catch(() => {});
     }
+  },
+
+  pages: async ({ customBrowser }, use) => {
+    const getPage = createPageFactory(customBrowser.page);
+    await use({ getPage });
   },
 });
 
