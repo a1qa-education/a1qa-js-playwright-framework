@@ -1,2 +1,0 @@
-@auth
-Feature: Basic Authentication
