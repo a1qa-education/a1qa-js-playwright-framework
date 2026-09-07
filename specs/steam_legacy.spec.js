@@ -4,7 +4,7 @@ import { expect } from 'chai';
 describe('Steam Legacy Test', function () {
     this.timeout(60000);
 
-    it(`STEAM-TC-001 Dynamic Filtering (by Windows & by Singleplayer tag) & Ascending Price Sorting`, async function () {
+    it(`STEAM-TC-001 Dynamic Filtering (by Windows & by Single-player) & Ascending Price Sorting`, async function () {
         const browser = await chromium.launch({
             headless: false
         });
@@ -41,7 +41,8 @@ describe('Steam Legacy Test', function () {
 
         await page.waitForTimeout(3000);
 
-        const singlePlayer = await page.$('//span[@role="button"]//span[contains(text(),"Singleplayer")]');
+        await page.locator('//div[text()="Narrow by number of players"]').click();
+        const singlePlayer = await page.locator('//span[@role="button"]//span[contains(text(),"Single-player")]');
 
         if (singlePlayer) {
             await singlePlayer.click();
@@ -65,7 +66,7 @@ describe('Steam Legacy Test', function () {
 
         for (let i = 1; i <= 10; i++) {
             try {
-                const priceElement = await page.locator(`//a[contains(@class,'search_result_row')][${i}]//*[contains(@class,'discount_final_price')]`);
+                const priceElement = await page.locator(`//a[contains(@class,'search_result_row')][${i}]//*[contains(@class,'price')]`);
                 const raw = await priceElement.textContent();
                 prices.push(parseFloat(raw.replace('$', '')));
             } catch (e) {
@@ -91,7 +92,7 @@ describe('Steam Legacy Test', function () {
         await browser.close();
     })
 
-    it(`STEAM-TC-002 Dynamic Filtering (by macOS & by Indie tag) & Descending Price Sorting`, async function () {
+    it(`STEAM-TC-002 Dynamic Filtering (by macOS & by Multi-player) & Descending Price Sorting`, async function () {
         const browser = await chromium.launch({
             headless: false
         });
@@ -99,8 +100,8 @@ describe('Steam Legacy Test', function () {
         await page.goto('https://store.steampowered.com/');
 
         expect(await page.title()).to.not.equal(null);
-        expect(await page.$('body')).to.not.equal(null);
-        expect(await page.$('body')).to.not.equal(null);
+        expect(await page.locator('body')).to.not.equal(null);
+        expect(await page.locator('body')).to.not.equal(null);
 
         const search = await page.locator('//form//input[@autocomplete="off"]');
 
@@ -128,7 +129,8 @@ describe('Steam Legacy Test', function () {
 
         await page.waitForTimeout(3000);
 
-        const singlePlayer = await page.$('//span[@role="button"]//span[contains(text(),"Indie")]');
+        await page.locator('//div[text()="Narrow by number of players"]').click()
+        const singlePlayer = await page.locator('//span[@role="button"]//span[contains(text(),"Multi-player")]');
 
         if (singlePlayer) {
             await singlePlayer.click();
@@ -152,7 +154,7 @@ describe('Steam Legacy Test', function () {
 
         for (let i = 1; i <= 10; i++) {
             try {
-                const priceElement = await page.locator(`//a[contains(@class,'search_result_row')][${i}]//*[contains(@class,'discount_final_price')]`);
+                const priceElement = await page.locator(`//a[contains(@class,'search_result_row')][${i}]//*[contains(@class,'price')]`);
                 const raw = await priceElement.textContent();
                 prices.push(parseFloat(raw.replace('$', '')));
             } catch (e) {
