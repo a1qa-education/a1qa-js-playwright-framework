@@ -1,9 +1,9 @@
 import { chromium } from 'playwright';
 import { expect } from 'chai';
+import { describe, it } from 'mocha';
 
 describe('Steam Legacy Test', function () {
     this.timeout(60000);
-
     it(`STEAM-TC-001 Dynamic Filtering (by Windows & by Single-player) & Ascending Price Sorting`, async function () {
         const browser = await chromium.launch({
             headless: false
@@ -179,4 +179,18 @@ describe('Steam Legacy Test', function () {
         expect(prices.toString()).to.equal(expected.toString());
         await browser.close();
     })
+/*
+    // Need to exclude from run
+    it(`STEAM-TC-003`, async function () {
+        const browser = await chromium.launch({
+            headless: false
+        });
+        const page = await browser.newPage();
+        await page.goto('https://store.steampowered.com/');
+
+        expect(await page.title()).to.not.equal(null);
+        expect(await page.locator('body')).to.not.equal(null);
+        expect(await page.locator('body')).to.not.equal(null);
+    })
+*/
 })
