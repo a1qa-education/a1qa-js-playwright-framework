@@ -4,7 +4,7 @@ import BasePage from '#framework/ui/page/BasePage.js';
 export default class CookiesForm extends BasePage {
   constructor(page) {
     super(new Button(page.locator('.cookies'), 'Cookies form unique locator'), 'Cookies form');
-    this.acceptCookiesButton = new Button(page.getByRole('button', { name: 'Yes' }), 'Accept Cookies Button');
+    this.acceptCookiesButton = new Button(page.getByRole('button', { name: 'Not really,no' }), 'Accept Cookies Button');
   }
 
   async clickAcceptCookiesButton() {

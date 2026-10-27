@@ -52,7 +52,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
 
-    baseURL: process.env.BASE_URL || 'https://userinyerface.com',
+    baseURL: process.env.BASE_URL || 'https://userinyerface.com/game.html',
     acceptDownloads: true,
   },
 
