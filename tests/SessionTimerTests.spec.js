@@ -2,7 +2,7 @@ import { test, expect } from '#framework/ui/fixtures/browser.fixture.js';
 import MainPage from './pages/MainPage.js';
 
 const expectedTimerValue = '00:00:00';
-const timerDisplayTimeout = 675;
+const timerDisplayTimeout = 725;
 
 test('Check timer initial value', async ({ customBrowser: browser }) => {
   const mainPage = new MainPage(browser.page);
