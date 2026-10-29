@@ -34,7 +34,7 @@ a1qa-js-playwright-framework/
 │   └── utils/               # ConfigReader.js, EnvProvider.js, FileUtils.js, FrameUtils.js
 ├── tests/                   # Application-Specific Specs
 │   ├── pages/               # Page Objects (LoginPage, MainPage, etc.)
-│   └── demo.spec.js         # Test Specifications
+│   └── *.spec.js            # Test Specifications
 ├── .env.example             # Template for required environment variables
 ├── eslint.config.js         # ESLint v10 Flat Config rules
 └── playwright.config.js     # Playwright engine and multi-browser configuration
@@ -219,3 +219,17 @@ npm run lint
 ```
 
 *(Tip: If using VS Code, formatting and ESLint rules are automatically applied on save).*
+
+---
+
+## Unit 4 Practice Task
+
+Requirements: Node.js >= 20.19, Chrome/Chromium.
+
+```bash
+npm ci
+npx playwright install chromium
+npx playwright test
+```
+
+The starter suite has no reporter besides the console `list`. Add Allure yourself as part of the task.

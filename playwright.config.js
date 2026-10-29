@@ -41,16 +41,14 @@ export default defineConfig({
   retries: isCI ? 2 : 0,
   workers: isCI ? 1 : undefined,
 
-  reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-    ...(isCI ? [['junit', { outputFile: 'results.xml' }]] : [])
-  ],
+  timeout: 90_000,
+
+  // Unit 4: the only reporter students add is Allure.
+  reporter: [['list']],
 
   use: {
     headless: isCI ? true : (process.env.HEADLESS !== 'false'),
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
+    actionTimeout: 10_000,
 
     baseURL: process.env.BASE_URL || 'https://userinyerface.com/game.html',
     acceptDownloads: true,

@@ -14,10 +14,10 @@ test('Check password policy compliance', async ({ customBrowser: browser }) => {
   await signUpForm.waitForPageToLoad();
   expect(await signUpForm.isPageOpened()).toBe(true);
   expect(await signUpForm.getPageIndicatorText()).toBe(firstCardPageIndicatorText);
+  await signUpForm.typePassword(testData.firstPassword);
   await signUpForm.typeEmail(testData.emailName);
   await signUpForm.typeDomain(testData.emailDomain);
   await signUpForm.selectDomain(testData.emailExtension);
-  await signUpForm.typePassword(testData.firstPassword);
   await signUpForm.acceptTermsConditionsValue();
   await signUpForm.clickNextButton();
 
@@ -38,10 +38,10 @@ test('Check email domain extensions', async ({ customBrowser: browser }) => {
     await signUpForm.waitForPageToLoad();
     expect(await signUpForm.isPageOpened()).toBe(true);
     expect(await signUpForm.getPageIndicatorText()).toBe(firstCardPageIndicatorText);
+    await signUpForm.typePassword(testData.secondPassword);
     await signUpForm.typeEmail(testData.emailName);
     await signUpForm.typeDomain(testData.emailDomain);
     await signUpForm.selectDomain(emailExtension);
-    await signUpForm.typePassword(testData.secondPassword);
     await signUpForm.acceptTermsConditionsValue();
     await signUpForm.clickNextButton();
 

@@ -15,7 +15,7 @@ export default class SignUpForm extends BasePage {
   }
 
   async typePassword(password) {
-    this.passwordTextbox.setText(password);
+    await this.passwordTextbox.setText(password);
   }
 
   async typeEmail(email) {
