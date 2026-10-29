@@ -36,10 +36,11 @@ const allProjects = [
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  // Unit 4: tests run one at a time, so the TC4 timing does not depend on parallel load.
+  fullyParallel: false,
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
-  workers: isCI ? 1 : undefined,
+  workers: 1,
 
   timeout: 90_000,
 
