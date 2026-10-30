@@ -36,7 +36,6 @@ const allProjects = [
 
 export default defineConfig({
   testDir: './tests',
-  // Unit 4: tests run one at a time, so the TC4 timing does not depend on parallel load.
   fullyParallel: false,
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
@@ -44,7 +43,6 @@ export default defineConfig({
 
   timeout: 90_000,
 
-  // Unit 4: the only reporter students add is Allure.
   reporter: [['list']],
 
   use: {

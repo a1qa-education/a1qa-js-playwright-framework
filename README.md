@@ -231,5 +231,3 @@ npm ci
 npx playwright install chromium
 npx playwright test
 ```
-
-The starter suite has no reporter besides the console `list`. Add Allure yourself as part of the task.
