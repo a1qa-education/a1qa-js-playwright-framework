@@ -1,4 +1,4 @@
-import { Button, TextBox, Checkbox } from '#framework/ui/elements/index.js';
+import { Button, TextBox, Checkbox, Label } from '#framework/ui/elements/index.js';
 import BasePage from '#framework/ui/page/BasePage.js';
 
 export default class SignUpForm extends BasePage {
@@ -11,10 +11,11 @@ export default class SignUpForm extends BasePage {
     this.domainDropdownItemButton = (domain) => new Button(page.locator('.dropdown__list-item', { hasText: domain }), `${domain} Domain Dropdown Item Button`);
     this.nextButton = new Button(page.locator('a.button--secondary', { hasText: 'Next' }), 'Next Button');
     this.acceptTermsConditionsCheckbox = new Checkbox(page.locator('label[for="accept-terms-conditions"]'), 'Accept Terms Conditions');
+    this.pageIndicatorLabel = new Label(page.locator('div.page-indicator'), "Page Indicator")
   }
 
   async typePassword(password) {
-    this.passwordTextbox.setText(password);
+    await this.passwordTextbox.setText(password);
   }
 
   async typeEmail(email) {
@@ -36,5 +37,9 @@ export default class SignUpForm extends BasePage {
 
   async clickNextButton() {
     await this.nextButton.click();
+  }
+
+  async getPageIndicatorText() {
+    return await this.pageIndicatorLabel.getText();
   }
 }

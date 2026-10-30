@@ -36,23 +36,20 @@ const allProjects = [
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
-  workers: isCI ? 1 : undefined,
+  workers: 1,
 
-  reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-    ...(isCI ? [['junit', { outputFile: 'results.xml' }]] : [])
-  ],
+  timeout: 90_000,
+
+  reporter: [['list']],
 
   use: {
     headless: isCI ? true : (process.env.HEADLESS !== 'false'),
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
+    actionTimeout: 10_000,
 
-    baseURL: process.env.BASE_URL || 'https://userinyerface.com',
+    baseURL: process.env.BASE_URL || 'https://userinyerface.com/game.html',
     acceptDownloads: true,
   },
 

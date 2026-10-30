@@ -1,3 +1,7 @@
 {
-  "fileForUpload": "tests/resources/uploads/avatar.png"
+  "emailName": "aqauser",
+  "emailDomain": "example",
+  "emailExtension": "com",
+  "firstPassword": "ZXCVB12345",
+  "secondPassword": "Aqauser12345"
 }
