@@ -14,16 +14,16 @@ test('Check password policy compliance', async ({ customBrowser: browser }) => {
   await signUpForm.waitForPageToLoad();
   expect(await signUpForm.isPageOpened()).toBe(true);
   expect(await signUpForm.getPageIndicatorText()).toBe(firstCardPageIndicatorText);
+  await signUpForm.typePassword(testData.firstPassword);
   await signUpForm.typeEmail(testData.emailName);
   await signUpForm.typeDomain(testData.emailDomain);
   await signUpForm.selectDomain(testData.emailExtension);
-  await signUpForm.typePassword(testData.firstPassword);
   await signUpForm.acceptTermsConditionsValue();
   await signUpForm.clickNextButton();
 
   const interestsForm = mainPage.interestsForm;
+  expect(await interestsForm.isInterestsTitleDisplayed()).toBe(true);
   expect(await interestsForm.getPageIndicatorText()).toBe(secondCardPageIndicatorText);
-  expect(await interestsForm.isPageOpened()).toBe(true);
 });
 
 test('Check email domain extensions', async ({ customBrowser: browser }) => {
@@ -33,20 +33,19 @@ test('Check email domain extensions', async ({ customBrowser: browser }) => {
   const mainPage = new MainPage(browser.page);
   const signUpForm = mainPage.signUpForm;
   const interestsForm = mainPage.interestsForm;
+  await signUpForm.waitForPageToLoad();
+  expect(await signUpForm.isPageOpened()).toBe(true);
+  expect(await signUpForm.getPageIndicatorText()).toBe(firstCardPageIndicatorText);
 
   for(const emailExtension of emailExtensions) {
-    await signUpForm.waitForPageToLoad();
-    expect(await signUpForm.isPageOpened()).toBe(true);
-    expect(await signUpForm.getPageIndicatorText()).toBe(firstCardPageIndicatorText);
+    await signUpForm.typePassword(testData.secondPassword);
     await signUpForm.typeEmail(testData.emailName);
     await signUpForm.typeDomain(testData.emailDomain);
     await signUpForm.selectDomain(emailExtension);
-    await signUpForm.typePassword(testData.secondPassword);
     await signUpForm.acceptTermsConditionsValue();
     await signUpForm.clickNextButton();
 
-    await interestsForm.waitForPageToLoad();
-    expect(await interestsForm.isPageOpened()).toBe(true);
+    expect(await interestsForm.isInterestsTitleDisplayed()).toBe(true);
     expect(await interestsForm.getPageIndicatorText()).toBe(secondCardPageIndicatorText);
     await browser.refresh();
   }
