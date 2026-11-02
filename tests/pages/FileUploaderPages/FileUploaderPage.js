@@ -1,4 +1,4 @@
-import BasePage from "#framework/ui/page/BasePage.js";
+import BasePage from '#framework/ui/page/BasePage.js';
 import { Label, FileInput, Button } from '#framework/ui/elements/index.js';
 
 export default class FileUploaderPage extends BasePage {
