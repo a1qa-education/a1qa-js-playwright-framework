@@ -1,5 +1,5 @@
-import { Button, Label } from "#framework/ui/elements/index.js";
-import BasePage from "#framework/ui/page/BasePage.js";
+import { Button, Label } from '#framework/ui/elements/index.js';
+import BasePage from '#framework/ui/page/BasePage.js';
 
 export default class FramesPage extends BasePage {
   constructor(page) {

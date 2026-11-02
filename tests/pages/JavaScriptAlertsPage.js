@@ -1,4 +1,4 @@
-import BasePage from "#framework/ui/page/BasePage.js";
+import BasePage from '#framework/ui/page/BasePage.js';
 import { Button, Label } from '#framework/ui/elements/index.js';
 
 export default class JavaScriptAlertsPage extends BasePage {

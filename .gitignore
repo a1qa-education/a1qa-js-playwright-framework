@@ -1,16 +1,28 @@
-
-# Playwright
+# Dependencies
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
+
+# Environment files
 .env
+.env.local
+.env.*.local
 
-# Cucumber Reports
-/reports/
-/allure-results/
-/allure-report/
+# Playwright Test Outputs
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+results.xml
+reports/
 
-# Environment & Downloads
-downloads/
+# Allure
+allure-results/
+allure-report/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.idea/

@@ -3,7 +3,15 @@ import playwright from 'eslint-plugin-playwright';
 
 export default [
   {
-    ignores: ['test-results/', 'playwright-report/', 'blob-report/', 'playwright/.cache/']
+    ignores: [
+      'test-results/',
+      'playwright-report/',
+      'blob-report/',
+      'playwright/.cache/',
+      'allure-results/',
+      'allure-report/',
+      'reports/'
+    ]
   },
 
   // Base recommended JavaScript rules
